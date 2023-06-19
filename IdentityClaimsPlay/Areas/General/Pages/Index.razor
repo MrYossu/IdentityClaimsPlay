@@ -1,0 +1,30 @@
+﻿@page "/"
+
+<PageTitle>Users</PageTitle>
+
+<h1>Users</h1>
+<ul>
+  @foreach (User user in _users) {
+    <li><a href="/user/@user.Id">@user.Email</a></li>
+  }
+</ul>
+
+@if (_claims.Any()) {
+  <h3>Claims</h3>
+  <p>@_user's role is @_claims.Single(c => c.Type == ClaimsHelper.UserRole).Value</p>
+  @if (_claims.Count > 1) {
+    <p>@_user has the following claim(s)...</p>
+    <ul>
+      @foreach (ClaimDto claim in _claims.Where(c => c.Type != ClaimsHelper.UserRole)) {
+        <li>@claim</li>
+      }
+    </ul>
+  }
+}
+
+<h2>Your auth state</h2>
+@if (_me?.Identity?.IsAuthenticated ?? false) {
+  <p>You are logged in as @_me.Identity?.Name and have @_me.Identities.Count() identity/identities</p>
+} else {
+  <p>You are not logged in.</p>
+}

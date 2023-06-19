@@ -1,0 +1,33 @@
+﻿@page "/log-in"
+@model IdentityClaimsPlay.Areas.Identity.Pages.Account.LoginModel
+
+@{
+  ViewData["Title"] = "Log in";
+}
+
+<section class="offset">
+  <h1><span class="fa fa-sign-in-alt" aria-hidden="true"></span> Log in</h1>
+
+  <form id="account" method="post">
+    <hr />
+
+    <div class="form-floating mb-3">
+      <input type="email" asp-for="Input.Email" class="form-control" id="floatingInput" placeholder="name@example.com">
+      <label for="floatingInput">Email address</label>
+      <span asp-validation-for="Input.Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-floating mb-3">
+      <input asp-for="Input.Password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
+      <label for="floatingPassword">Password</label>
+      <span asp-validation-for="Input.Password" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Log in</button>
+  </form>
+  <p class="mt-2">Forgot your password, or want to change it? <a href="@RouteHelper.ForgotPassword">Just click here</a>.</p>
+</section>
+
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,40 @@
+﻿@inherits LayoutComponentBase
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<TelerikRootComponent>
+  <PageTitle>Identity Claims Play</PageTitle>
+
+  <div class="page">
+    <div class="sidebar">
+      <NavMenu />
+    </div>
+
+    <main>
+      <div class="top-row px-4">
+        <CascadingAuthenticationState>
+          @if (string.IsNullOrWhiteSpace(_user.Identity?.Name)) {
+            <a href="@RouteHelper.Login" class="w-auto"><span class="@IconsHelper.LogIn float-start"></span> Log in</a>
+            <a href="@RouteHelper.ForgotPassword" class="w-auto"><span class="@IconsHelper.UserCog float-start"></span> Forgotten password</a>
+          } else {
+            <div>@_user.Identity?.Name</div>
+            <a href="@RouteHelper.ChangePassword" class="w-auto"><span class="@IconsHelper.UserAlt float-start"></span> Change password</a>
+            <a href="@RouteHelper.Logout" class="w-auto"><span class="@IconsHelper.LogOut float-start"></span> Log out</a>
+          }
+        </CascadingAuthenticationState>
+      </div>
+
+      <article class="content px-4">
+        @Body
+      </article>
+    </main>
+  </div>
+</TelerikRootComponent>
+
+@code {
+
+  ClaimsPrincipal _user = null!;
+
+  protected override async Task OnParametersSetAsync() =>
+    _user = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+
+}

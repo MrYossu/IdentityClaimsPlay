@@ -1,0 +1,35 @@
+﻿@page "/user/{Id}"
+
+<h1>User details for Id: @Id</h1>
+
+@if (_loaded) {
+  if (!string.IsNullOrWhiteSpace(_model.Email)) {
+    <h3>Email @_model.Email</h3>
+    <EditForm Model="@_model">
+      <h3>
+        Role:
+        <TelerikDropDownList Data="@_roles"
+                             @bind-Value="@_model.Role"
+                             TextField="Name"
+                             ValueField="Value"
+                             Width="300px" />
+      </h3>
+      @if (_model.Role == ClaimsHelper.UserRoleCardIssuerUser) {
+        <h3>Permissions</h3>
+        <ul style="list-style-type: none">
+          @foreach (PermissionDto permission in _model.Permissions) {
+            <li><TelerikCheckBox @bind-Value="@permission.HasPermission" Id="@permission.Value" /> <label for="@permission.Value">@permission.Value</label></li>
+          }
+        </ul>
+      }
+      <TelerikButton Rounded="@(ThemeConstants.Button.Rounded.Large)"
+                     ButtonType="@ButtonType.Submit"
+                     ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)"
+                     OnClick="Save"><span class="@IconsHelper.Save me-1"></span> Save</TelerikButton>
+    </EditForm>
+  } else {
+    <p>Big flop, can't find that user</p>
+  }
+} else {
+  <p>Loading...</p>
+}
