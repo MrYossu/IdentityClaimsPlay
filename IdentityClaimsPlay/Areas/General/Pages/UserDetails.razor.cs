@@ -17,12 +17,6 @@ public partial class UserDetails {
   protected override async Task OnParametersSetAsync() {
     _user = await UserManager.FindByIdAsync(Id);
     if (_user is not null) {
-      // Check for duplicate permissions. Should never happen, but has an needs to be fixed
-      //List<string> dupePerms = (await UserManager.GetClaimsAsync(_user)).Where(c => c.Type != ClaimsHelper.UserRole).GroupBy(p=>p.Value).Where(g=>g.Count()>1).Select(g=>g.Key).ToList();
-      //foreach (string dupe in dupePerms) {
-      //  await UserManager.RemoveClaimAsync(_user, new Claim(ClaimsHelper.UserPermission, dupe));
-      //}
-
       List<ClaimDto> claims = (await UserManager.GetClaimsAsync(_user)).Select(c => new ClaimDto(c.Type, c.Value)).ToList();
       _model = new UserModel {
         Email = _user.Email ?? "",
