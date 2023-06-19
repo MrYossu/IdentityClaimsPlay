@@ -1,10 +1,8 @@
 ﻿@page "/user/{Id}"
 
-<h1>User details for Id: @Id</h1>
-
 @if (_loaded) {
   if (!string.IsNullOrWhiteSpace(_model.Email)) {
-    <h3>Email @_model.Email</h3>
+    <h1>User details for Id: @_model.Email</h1>
     <EditForm Model="@_model">
       <h3>
         Role:
@@ -28,8 +26,9 @@
                      OnClick="Save"><span class="@IconsHelper.Save me-1"></span> Save</TelerikButton>
     </EditForm>
   } else {
+    <h1>User not found</h1>
     <p>Big flop, can't find that user</p>
   }
 } else {
-  <p>Loading...</p>
+  <h1>Loading...</h1>
 }

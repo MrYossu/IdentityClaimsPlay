@@ -1,30 +1,17 @@
 ﻿@page "/"
 
-<PageTitle>Users</PageTitle>
+<PageTitle>Identity Claims Play</PageTitle>
 
-<h1>Users</h1>
-<ul>
-  @foreach (User user in _users) {
-    <li><a href="/user/@user.Id">@user.Email</a></li>
-  }
-</ul>
+<h1>Identity Claims Play</h1>
+<h3>See <a href="https://github.com/MrYossu/IdentityClaimsPlay" target="_blank">the project page</a> for more details of what's going on here</h3>
 
-@if (_claims.Any()) {
-  <h3>Claims</h3>
-  <p>@_user's role is @_claims.Single(c => c.Type == ClaimsHelper.UserRole).Value</p>
-  @if (_claims.Count > 1) {
-    <p>@_user has the following claim(s)...</p>
-    <ul>
-      @foreach (ClaimDto claim in _claims.Where(c => c.Type != ClaimsHelper.UserRole)) {
-        <li>@claim</li>
-      }
-    </ul>
-  }
-}
-
-<h2>Your auth state</h2>
 @if (_me?.Identity?.IsAuthenticated ?? false) {
-  <p>You are logged in as @_me.Identity?.Name and have @_me.Identities.Count() identity/identities</p>
+  <p>TODO - Tell them what they can do</p>
 } else {
-  <p>You are not logged in.</p>
+  <p>If you were logged in, you could do fab things. Try logging in as one of the following users, all of whom have a password of <code>1</code>...</p>
+  <ul style="list-style-type: none">
+    <li><code>admin@a.com</code> - global admin user</li>
+    <li><code>companyadmin@a.com</code> - admin company user</li>
+    <li><code>flunky1@a.com</code> and <code>flunky2@a.com</code> - both regular company users</li>
+  </ul>
 }

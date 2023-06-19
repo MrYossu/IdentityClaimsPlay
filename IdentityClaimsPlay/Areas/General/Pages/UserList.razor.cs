@@ -1,13 +1,17 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace IdentityClaimsPlay.Areas.General.Pages;
 
-public partial class Index {
+public partial class UserList {
   [Inject]
   public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
 
-  private ClaimsPrincipal _me = null!;
+  [Inject]
+  public AppDbContext Context { get; set; } = null!;
+
+  private List<User> _users = new();
 
   protected override async Task OnInitializedAsync() =>
-    _me = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+    _users = await Context.Users.OrderBy(u => u.Email).ToListAsync();
 }
