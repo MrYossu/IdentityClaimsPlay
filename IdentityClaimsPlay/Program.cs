@@ -48,13 +48,13 @@ app.MapFallbackToAreaPage("/_Host", "General");
 using IServiceScope serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
 UserManager<User> userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<User>>();
 // Overall admin, access to all areas, can do anything
-await AddUser("a.silver@pixata.co.uk", "1", ClaimsHelper.UserRoleAdmin);
+await AddUser("admin@a.com", "1", ClaimsHelper.UserRoleAdmin);
 // Card issuer access, access to most areas, can edit any data for his card issuer, but cannot see or edit data for other card issuers
-await AddUser("mryossu@hotmail.com", "1", ClaimsHelper.UserRoleCardIssuerAdmin);
+await AddUser("companyadmin@a.com", "1", ClaimsHelper.UserRoleCardIssuerAdmin);
 // Regular card issuer user, will only have access to specific areas as set up by the card issuer admin. Initially he can view donors and charities, but can't edit
-await AddUser("a@a.com", "1", ClaimsHelper.UserRoleCardIssuerUser, ClaimsHelper.UserCanViewCharities, ClaimsHelper.UserCanViewDonors);
+await AddUser("flunky1@a.com", "1", ClaimsHelper.UserRoleCardIssuerUser, ClaimsHelper.UserCanViewCharities, ClaimsHelper.UserCanViewDonors);
 // A more privileged regular card issuer user, can view and edit both donors and charities
-await AddUser("b@b.com", "1", ClaimsHelper.UserRoleCardIssuerUser, ClaimsHelper.UserCanViewCharities, ClaimsHelper.UserCanEditCharities, ClaimsHelper.UserCanViewDonors, ClaimsHelper.UserCanEditDonors);
+await AddUser("flunky2@.com", "1", ClaimsHelper.UserRoleCardIssuerUser, ClaimsHelper.UserCanViewCharities, ClaimsHelper.UserCanEditCharities, ClaimsHelper.UserCanViewDonors, ClaimsHelper.UserCanEditDonors);
 
 app.Run();
 
