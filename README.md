@@ -24,5 +24,7 @@ The code will add four users...
 - `flunky1@a.com` and `flunky2@a.com` - two flunky users
 
 ### Notes for anyone intending to clone this repo
-1. I use the rather excellent Telerik UI for Blazor components, which are referenced in this sample project. If you don't have a licence for this, you can either get a free trial, or just modify the pages that use Telerik controls to use regular Blazor controls. As I intend to lift large parts of this code into the real application, I started off using Telerik in the sample.
+1. I use the rather excellent [Telerik UI for Blazor](https://www.telerik.com/blazor-ui) components(*), which are referenced in this sample project. If you don't have a licence for this, you can either get a free trial, or just modify the pages that use Telerik controls to use regular Blazor controls. As I intend to lift large parts of this code into the real application, I started off using Telerik in the sample.
 2. As this is a sample, all users will have the stupendously secure password of `1`. If you copy any of this code into a real app, don't forget to tighten up the password rules in `Program.cs`! Specifically, set `options.Password.RequiredLength` to a [sensible length](https://blog.codinghorror.com/password-rules-are-bullshit/).
+
+(*) No, I don't work for Telerik, nor do I have any affiliation with them. I'm just a satisifed customer!
