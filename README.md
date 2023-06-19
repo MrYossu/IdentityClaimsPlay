@@ -17,3 +17,6 @@ My first stab at this is to have two types of claims, one confusingly named `Use
 - Allow a global admin to add, edit and delete users of any type
 - Allow company admins to add, edit and delete company admins and flunkies for their company
 - Ensure that company-specific users can only see or do what they are supposed to be allowed to see and do
+
+### Note for anyone intending to clone this repo
+I use the rather excellent Telerik UI for Blazor components, which are referenced in this sample project. If you don't have a licence for this, you can either get a free trial, or just modify the pages that use Telerik controls to use regular Blazor controls. As I intend to lift large parts of this code into the real application, I started off using Telerik in the sample.
