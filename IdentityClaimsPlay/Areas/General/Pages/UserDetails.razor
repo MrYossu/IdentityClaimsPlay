@@ -2,7 +2,7 @@
 
 @if (_loaded) {
   if (!string.IsNullOrWhiteSpace(_model.Email)) {
-    <h1>User details for Id: @_model.Email</h1>
+    <h1>User details for: @_model.Email</h1>
     <EditForm Model="@_model">
       <h3>
         Role:
@@ -12,7 +12,7 @@
                              ValueField="Value"
                              Width="300px" />
       </h3>
-      @if (_model.Role != ClaimsHelper.UserRoleAdmin) {
+      @if (Role == ClaimsHelper.UserRoleAdmin && _model.Role != ClaimsHelper.UserRoleAdmin) {
         <h3>
           Company:
           <TelerikDropDownList Data="@_companies"

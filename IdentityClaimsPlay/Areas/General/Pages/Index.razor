@@ -3,15 +3,39 @@
 <PageTitle>Identity Claims Play</PageTitle>
 
 <h1>Identity Claims Play</h1>
-<h3>See <a href="https://github.com/MrYossu/IdentityClaimsPlay" target="_blank">the project page</a> for more details of what's going on here</h3>
+<p>See <a href="https://github.com/MrYossu/IdentityClaimsPlay" target="_blank">the project page</a> for more details of what's going on here</p>
 
-@if (_me?.Identity?.IsAuthenticated ?? false) {
-  <p>You are logged in as @_me.Identity?.Name</p>
+<h2>Your details</h2>
+@if (_me.Identity?.IsAuthenticated ?? false) {
+  <p>You are logged in as <code>@_me.Identity?.Name</code>, and have the role <code>@Role.SplitCamelCase()</code></p>
+  @if (Role == ClaimsHelper.UserRoleCardIssuerUser) {
+    <p>You have the following permission(s)...</p>
+    <ul>
+      @foreach (var claim in _me.Claims.Where(c => c.Type == ClaimsHelper.UserPermission)) {
+        <li>@claim.Value.SplitCamelCase()</li>
+      }
+    </ul>
+  }
 } else {
-  <p>If you were logged in, you could do fab things. Try logging in as one of the following users, all of whom have a password of <code>1</code>...</p>
+  <p>You are not logged in. Try logging in as one of the following users, all of whom have a password of <code>1</code>...</p>
   <ul style="list-style-type: none">
     <li><code>admin@a.com</code> - global admin user</li>
     <li><code>companyadmin@a.com</code> - admin company user</li>
     <li><code>flunky1@a.com</code> and <code>flunky2@a.com</code> - both regular company users</li>
   </ul>
 }
+
+<h2>Access restrictions</h2>
+<p>These are the intentions, not all permissions (and indeed not all pages) may be implemented yet.</p>
+<dl>
+  <dt>Home page</dt>
+  <dd>Anyone can access</dd>
+  <dt>Company list</dt>
+  <dd>Only global admin can access</dd>
+  <dt>User list and details</dt>
+  <dd>Only global and company admins can access. Company admins can only see users for their company</dd>
+  <dt>TODO - Charity list and details</dt>
+  <dd>All admins, and flunkies with charity permissions can view. Only flunkies with edit charity permissions can edit</dd>
+  <dt>TODO - Donor list and details</dt>
+  <dd>All admins, and flunkies with donor permissions can view. Only flunkies with edit donor permissions can edit</dd>
+</dl>

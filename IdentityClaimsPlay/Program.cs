@@ -23,7 +23,15 @@ builder.Services.AddIdentity<User, IdentityRole>(options => {
   .AddEntityFrameworkStores<AppDbContext>();
 
 builder.Services.AddAuthorization(options => {
+  // Add two policies to check for admin users. First one is for pages that are only visible to global admin users...
   options.AddPolicy(ClaimsHelper.UserRoleAdmin, policyBuilder => policyBuilder.RequireAssertion(ctx => ctx.User.HasClaim(claim => claim is { Type: ClaimsHelper.UserRole, Value: ClaimsHelper.UserRoleAdmin })));
+  // The next policy is for global and company admin users. This way we only need add the one policy to the [Authorize] attribute, but still allow both types of users
+  options.AddPolicy(ClaimsHelper.UserRoleCardIssuerAdmin, policyBuilder => policyBuilder.RequireAssertion(ctx => ctx.User.HasClaim(claim => claim is { Type: ClaimsHelper.UserRole, Value: ClaimsHelper.UserRoleAdmin } or { Type: ClaimsHelper.UserRole, Value: ClaimsHelper.UserRoleCardIssuerAdmin })));
+  // TODO AYS - We need to add policies for the individual permissions. These would include both admin types as well
+  foreach (string permission in ClaimsHelper.AllPermissions) {
+    options.AddPolicy(ClaimsHelper.UserRoleCardIssuerAdmin, policyBuilder =>
+      policyBuilder.RequireAssertion(ctx => ctx.User.HasClaim(claim => (claim.Type == ClaimsHelper.UserRole && claim.Value != ClaimsHelper.UserRoleCardIssuerUser) || claim.Value == permission)));
+  }
 });
 
 builder.Services.AddRazorPages();
@@ -58,7 +66,7 @@ await AddUser("companyadmin@a.com", "1", ClaimsHelper.UserRoleCardIssuerAdmin);
 // Regular card issuer user, will only have access to specific areas as set up by the card issuer admin. Initially he can view donors and charities, but can't edit
 await AddUser("flunky1@a.com", "1", ClaimsHelper.UserRoleCardIssuerUser, ClaimsHelper.UserCanViewCharities, ClaimsHelper.UserCanViewDonors);
 // A more privileged regular card issuer user, can view and edit both donors and charities
-await AddUser("flunky2@.com", "1", ClaimsHelper.UserRoleCardIssuerUser, ClaimsHelper.UserCanViewCharities, ClaimsHelper.UserCanEditCharities, ClaimsHelper.UserCanViewDonors, ClaimsHelper.UserCanEditDonors);
+await AddUser("flunky2@a.com", "1", ClaimsHelper.UserRoleCardIssuerUser, ClaimsHelper.UserCanViewCharities, ClaimsHelper.UserCanEditCharities, ClaimsHelper.UserCanViewDonors, ClaimsHelper.UserCanEditDonors);
 
 app.Run();
 

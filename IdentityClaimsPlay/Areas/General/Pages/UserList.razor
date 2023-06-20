@@ -2,8 +2,7 @@
 
 <PageTitle>Users</PageTitle>
 
-<h1>Users</h1>
-<h3>TODO - If admin, show all users, if company admin, only show users for that company</h3>
+<h1>Users@(string.IsNullOrWhiteSpace(CompanyName) ? "" : $" for {CompanyName}")</h1>
 
 <p>Click on a user to see details</p>
 <ul>

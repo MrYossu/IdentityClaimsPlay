@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace IdentityClaimsPlay.Areas.General.Pages;
 
+[Authorize(Policy = ClaimsHelper.UserRoleAdmin)]
 public partial class CompanyDetails {
   [Parameter]
   public string Id { get; set; } = "";

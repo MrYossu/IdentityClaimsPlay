@@ -1,13 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace IdentityClaimsPlay.Areas.General.Pages;
 
+[Authorize(Policy = ClaimsHelper.UserRoleCardIssuerAdmin)]
 public partial class UserDetails {
   [Parameter]
   public string Id { get; set; } = "";
 
   [Inject]
   private AppDbContext Context { get; set; } = null!;
+
+  [Inject]
+  public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
+
+  private ClaimsPrincipal _me = null!;
+  private string Role { get; set; } = "";
 
   [Inject]
   public UserManager<User> UserManager { get; set; } = null!;
@@ -23,8 +32,11 @@ public partial class UserDetails {
   private List<NameValuePair> _companies = new();
   private readonly List<NameValuePair> _roles = ClaimsHelper.AllRoles.Select(p => new NameValuePair(p, p)).ToList();
 
-  protected override async Task OnInitializedAsync() =>
+  protected override async Task OnInitializedAsync() {
+    _me = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+    Role = _me.Claims.Single(c => c.Type == ClaimsHelper.UserRole).Value;
     _companies = (await Context.Companies.OrderBy(c => c.Name).ToListAsync()).Select(c => new NameValuePair(c.Name, c.Id)).ToList();
+  }
 
   protected override async Task OnParametersSetAsync() {
     _user = await Context.Users.Include(u => u.Company).SingleOrDefaultAsync(u => u.Id == Id);
@@ -42,7 +54,6 @@ public partial class UserDetails {
 
   private async Task Save() {
     _user!.CompanyId = _model.Role == ClaimsHelper.UserRoleAdmin ? "" : _model.CompanyId;
-    Console.WriteLine($"About to save, company Id: {_user.CompanyId} (from model: {_model.CompanyId})");
     Context.Users.Update(_user);
     await Context.SaveChangesAsync();
     IList<Claim> claims = await UserManager.GetClaimsAsync(_user);
