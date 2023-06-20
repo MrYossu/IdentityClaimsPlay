@@ -22,6 +22,10 @@ builder.Services.AddIdentity<User, IdentityRole>(options => {
   .AddDefaultTokenProviders()
   .AddEntityFrameworkStores<AppDbContext>();
 
+builder.Services.AddAuthorization(options => {
+  options.AddPolicy(ClaimsHelper.UserRoleAdmin, policyBuilder => policyBuilder.RequireAssertion(ctx => ctx.User.HasClaim(claim => claim is { Type: ClaimsHelper.UserRole, Value: ClaimsHelper.UserRoleAdmin })));
+});
+
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 

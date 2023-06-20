@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IdentityClaimsPlay.Areas.General.Pages;
 
-[Authorize]
+[Authorize(Policy = ClaimsHelper.UserRoleAdmin)]
 public partial class UserList {
   [Inject]
   public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
@@ -13,10 +13,9 @@ public partial class UserList {
   public AppDbContext Context { get; set; } = null!;
 
   private List<User> _users = new();
-  private bool _authed;
+
   protected override async Task OnInitializedAsync() {
-    _users = await Context.Users.OrderBy(u => u.Email).ToListAsync();
+    _users = await Context.Users.Include(u => u.Company).OrderBy(u => u.Email).ToListAsync();
     ClaimsPrincipal me = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
-    _authed = me?.Identity?.IsAuthenticated ?? false;
   }
 }

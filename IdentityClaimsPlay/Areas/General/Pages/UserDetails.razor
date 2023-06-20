@@ -12,6 +12,16 @@
                              ValueField="Value"
                              Width="300px" />
       </h3>
+      @if (_model.Role != ClaimsHelper.UserRoleAdmin) {
+        <h3>
+          Company:
+          <TelerikDropDownList Data="@_companies"
+                               @bind-Value="@_model.CompanyId"
+                               TextField="Name"
+                               ValueField="Value"
+                               Width="300px" />
+        </h3>
+      }
       @if (_model.Role == ClaimsHelper.UserRoleCardIssuerUser) {
         <h3>Permissions</h3>
         <ul style="list-style-type: none">
@@ -23,7 +33,9 @@
       <TelerikButton Rounded="@(ThemeConstants.Button.Rounded.Large)"
                      ButtonType="@ButtonType.Submit"
                      ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)"
-                     OnClick="Save"><span class="@IconsHelper.Save me-1"></span> Save</TelerikButton>
+                     OnClick="Save">
+        <span class="@IconsHelper.Save me-1"></span> Save
+      </TelerikButton>
     </EditForm>
   } else {
     <h1>User not found</h1>

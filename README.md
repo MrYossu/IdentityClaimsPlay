@@ -5,11 +5,13 @@
 Part of a project I'm starting requires us to allow the users to set permissions to control what other users can do on the site. I had previously used roles for this, but it was getting a bit cumbersome, and Microsoft seem to recommend going with claims anyway, so I decided to have a play around with this and see if I could get it all working.
 
 The project is a web site that will be used by many companies. We need three user types...
-- a global admin user role, who can see and edit all data
-- company admins, who can see and edit data relevant to their company, but not global data, nor data relevant to other companies
-- regular company users (referred to round here as _[flunkies](https://dictionary.cambridge.org/dictionary/english/flunky)_), who have limited permissions over their own company data. They may be able to view but not edit data, or they may be able to edit certain sets of data but not others.
+- A global admin user role, who can see and edit all data, including adding and editing companies
+- Company admins, who can see and edit data relevant to their company, but not global data, nor data relevant to other companies
+- Regular company users (referred to round here as _[flunkies](https://dictionary.cambridge.org/dictionary/english/flunky)_), who have limited permissions over their own company data. They may be able to view but not edit data, or they may be able to edit certain sets of data but not others. Their specific permissions are to be set by their company admin.
 
-My first stab at this is to have two types of claims, one confusingly named `UserRole` (not to be confused with ASP.NET Core `Roles`), and one named `UserPermission`. The former specifies which of the three user roles is applicable. A user should always have exactly one of these claims. The latter type of claims is only relevant for flunkies, and specifies which specific actions they can perform.
+My first stab at this is to have two types of claims, one confusingly named `UserRole` (not to be confused with ASP.NET Core `Roles`), and one named `UserPermission`. The former specifies which of the three user types is applicable. A user should always have exactly one of these claims. The latter type of claims is only relevant for flunkies, and specifies which specific actions they can perform.
+
+>I'm wondering if I should use two identities, one for the user's role, and a separate on for permissions. It seems that this is basically what multiple identities are for, but it does seem like overkill, especially as the two concepts are so closely related. I'm continuing with my original approach for the moment, but will keep this point in mind.
 
 ### Objectives
 - Set up the three types of user described above

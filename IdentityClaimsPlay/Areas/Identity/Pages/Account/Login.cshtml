@@ -7,10 +7,7 @@
 
 <section class="offset">
   <h1><span class="fa fa-sign-in-alt" aria-hidden="true"></span> Log in</h1>
-  <h4>No, this page doesn't look great! It was pulled from another project, which had extra styling to make it look great. I didn't bother tidying this version up as it's only a sample. I leave it to you to spiff it up before using</h4>
-  <form id="account" method="post">
-    <hr />
-
+  <form id="account" method="post" class="w-25">
     <div class="form-floating mb-3">
       <input type="email" asp-for="Input.Email" class="form-control" id="floatingInput" placeholder="name@example.com">
       <label for="floatingInput">Email address</label>
@@ -26,6 +23,7 @@
     <button type="submit" class="btn btn-primary">Log in</button>
   </form>
   <p class="mt-2">Forgot your password, or want to change it? <a href="@RouteHelper.ForgotPassword">Just click here</a>.</p>
+  <h3><a href="/">Back to the home page</a></h3>
 </section>
 
 @section Scripts {
