@@ -53,7 +53,7 @@ public partial class UserDetails {
   }
 
   private async Task Save() {
-    _user!.CompanyId = _model.Role == ClaimsHelper.UserRoleAdmin ? "" : _model.CompanyId;
+    _user!.CompanyId = _model.Role == ClaimsHelper.UserRoleAdmin ? null : _model.CompanyId;
     Context.Users.Update(_user);
     await Context.SaveChangesAsync();
     IList<Claim> claims = await UserManager.GetClaimsAsync(_user);
