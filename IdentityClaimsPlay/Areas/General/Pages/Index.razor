@@ -6,7 +6,7 @@
 <h3>See <a href="https://github.com/MrYossu/IdentityClaimsPlay" target="_blank">the project page</a> for more details of what's going on here</h3>
 
 @if (_me?.Identity?.IsAuthenticated ?? false) {
-  <p>TODO - Tell them what they can do</p>
+  <p>You are logged in as @_me.Identity?.Name</p>
 } else {
   <p>If you were logged in, you could do fab things. Try logging in as one of the following users, all of whom have a password of <code>1</code>...</p>
   <ul style="list-style-type: none">

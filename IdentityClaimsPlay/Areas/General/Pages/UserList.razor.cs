@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace IdentityClaimsPlay.Areas.General.Pages;
 
+[Authorize]
 public partial class UserList {
   [Inject]
   public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
@@ -11,7 +13,10 @@ public partial class UserList {
   public AppDbContext Context { get; set; } = null!;
 
   private List<User> _users = new();
-
-  protected override async Task OnInitializedAsync() =>
+  private bool _authed;
+  protected override async Task OnInitializedAsync() {
     _users = await Context.Users.OrderBy(u => u.Email).ToListAsync();
+    ClaimsPrincipal me = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+    _authed = me?.Identity?.IsAuthenticated ?? false;
+  }
 }

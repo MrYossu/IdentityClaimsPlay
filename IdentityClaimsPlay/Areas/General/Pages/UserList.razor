@@ -1,8 +1,10 @@
 ﻿@page "/users"
+@attribute [Authorize]
 
 <PageTitle>Users</PageTitle>
 
 <h1>Users</h1>
+<h3>Authed? @_authed</h3>
 <p>Click on a user to see details (if you have permission of course!)</p>
 <ul>
   @foreach (User user in _users) {
