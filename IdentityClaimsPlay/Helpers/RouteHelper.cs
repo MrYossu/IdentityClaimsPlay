@@ -12,7 +12,8 @@ public class RouteHelper {
   public const string ResetPassword = "/reset-password"; // For logged-in users to change their password. Doesn't require a link
 
   public const string CharityList = "/charities";
-  public const string CharityDetails = "/charity/{id}";
+  public const string CharityDetails = "/charity/";
+  public const string CharityDetailsId = "/charity/{id}";
   public const string CompanyList = "/companies";
   public const string CompanyDetails = "/company/{id}";
   public const string DonorList = "/donors";
