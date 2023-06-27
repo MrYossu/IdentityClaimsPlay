@@ -10,6 +10,6 @@
 
 <ul>
   @foreach (Charity charity in _charities) {
-    <li><a href="@(RouteHelper.CharityDetails+charity.Id)">@charity.Name</a></li>
+    <li><a href="@(RouteHelper.CharityDetails + charity.Id)">@charity.Name</a> @(string.IsNullOrWhiteSpace(_companyId) ? charity.Company.Name : "")</li>
   }
 </ul>
