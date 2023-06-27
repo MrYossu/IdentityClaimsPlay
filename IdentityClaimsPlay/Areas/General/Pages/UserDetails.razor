@@ -1,4 +1,4 @@
-﻿@page "/user/{Id}"
+﻿@attribute [Route(RouteHelper.UserDetails)]
 
 @if (_loaded) {
   if (!string.IsNullOrWhiteSpace(_model.Email)) {
