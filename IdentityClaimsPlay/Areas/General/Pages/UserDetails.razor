@@ -1,9 +1,17 @@
-﻿@attribute [Route(RouteHelper.UserDetails)]
+﻿@attribute [Route(RouteHelper.UserDetailsId)]
 
 @if (_loaded) {
-  if (!string.IsNullOrWhiteSpace(_model.Email)) {
-    <h1>User details for: @_model.Email</h1>
+  if (Id == "new" || !string.IsNullOrWhiteSpace(_model.Email)) {
+    @if (Id == "new") {
+      <h1>New user</h1>
+    } else {
+      <h1>User details for: @_model.Email</h1>
+    }
+    
     <EditForm Model="@_model">
+      @if (Id == "new") {
+        <h3>Email: <TelerikTextBox @bind-Value="_model.Email" Width="300px" /></h3>
+      }
       <h3>
         Role:
         <TelerikDropDownList Data="@_roles"

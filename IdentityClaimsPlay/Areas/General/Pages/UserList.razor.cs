@@ -17,7 +17,7 @@ public partial class UserList {
     ClaimsPrincipal me = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
     // As this page is authed, we know that the user must be logged in, so are safe with the ! operator on the next line
     User meUser = await Context.Users.Include(u => u.Company).SingleAsync(u => u.Email == me.Identity!.Name);
-    _users = await Context.Users.Include(u => u.Company).Where(u => string.IsNullOrWhiteSpace(meUser.CompanyId) || u.CompanyId == meUser.CompanyId).OrderBy(u => u.Email).ToListAsync();
+    _users = (await Context.Users.Include(u => u.Company).Where(u => string.IsNullOrWhiteSpace(meUser.CompanyId) || u.CompanyId == meUser.CompanyId).ToListAsync()).OrderBy(u => u.Company?.Name ?? "").ThenBy(u => u.Email).ToList();
     CompanyName = meUser.Company?.Name ?? "";
   }
 }

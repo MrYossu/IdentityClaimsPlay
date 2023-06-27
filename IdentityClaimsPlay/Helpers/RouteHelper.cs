@@ -19,5 +19,6 @@ public class RouteHelper {
   public const string DonorList = "/donors";
   public const string DonorDetails = "/donor/{id}";
   public const string UserList = "/users";
-  public const string UserDetails = "/user/{id}";
+  public const string UserDetailsId = "/user/{id}";
+  public const string UserDetails = "/user/";
 }
