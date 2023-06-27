@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -26,10 +27,12 @@ builder.Services.AddAuthorization(options => {
   // Add two policies to check for admin users. First one is for pages that are only visible to global admin users...
   options.AddPolicy(ClaimsHelper.UserRoleAdmin, policyBuilder => policyBuilder.RequireAssertion(ctx => ctx.User.HasClaim(claim => claim is { Type: ClaimsHelper.UserRole, Value: ClaimsHelper.UserRoleAdmin })));
   // The next policy is for global and company admin users. This way we only need add the one policy to the [Authorize] attribute, but still allow both types of users
-  options.AddPolicy(ClaimsHelper.UserRoleCardIssuerAdmin, policyBuilder => policyBuilder.RequireAssertion(ctx => ctx.User.HasClaim(claim => claim is { Type: ClaimsHelper.UserRole, Value: ClaimsHelper.UserRoleAdmin } or { Type: ClaimsHelper.UserRole, Value: ClaimsHelper.UserRoleCardIssuerAdmin })));
-  // TODO AYS - We need to add policies for the individual permissions. These would include both admin types as well
+  options.AddPolicy(ClaimsHelper.UserRoleCardIssuerAdmin, policyBuilder => 
+    policyBuilder.RequireAssertion(ctx => ctx.User.HasClaim(claim => claim is { Type: ClaimsHelper.UserRole, Value: ClaimsHelper.UserRoleAdmin } or { Type: ClaimsHelper.UserRole, Value: ClaimsHelper.UserRoleCardIssuerAdmin })));
+  // Add a policy for each permission
+  // TODO AYS - This isn't right. If someone has permission to edit something, we can assume they are allowed to view it, whereas this approach would prevent us from allowing them to view and edit
   foreach (string permission in ClaimsHelper.AllPermissions) {
-    options.AddPolicy(ClaimsHelper.UserRoleCardIssuerAdmin, policyBuilder =>
+    options.AddPolicy(permission, policyBuilder =>
       policyBuilder.RequireAssertion(ctx => ctx.User.HasClaim(claim => (claim.Type == ClaimsHelper.UserRole && claim.Value != ClaimsHelper.UserRoleCardIssuerUser) || claim.Value == permission)));
   }
 });

@@ -21,6 +21,5 @@ public partial class UserList {
     User meUser = await Context.Users.Include(u => u.Company).SingleAsync(u => u.Email == me.Identity!.Name);
     _users = await Context.Users.Include(u => u.Company).Where(u => string.IsNullOrWhiteSpace(meUser.CompanyId) || u.CompanyId == meUser.CompanyId).OrderBy(u => u.Email).ToListAsync();
     CompanyName = meUser.Company?.Name ?? "";
-    Console.WriteLine($"comp: {CompanyName}");
   }
 }

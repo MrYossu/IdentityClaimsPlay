@@ -3,6 +3,7 @@
 public class RouteHelper {
   public const string Home = @"/";
 
+  public const string NotAuthorised = "/not-authorised";
   public const string Login = "/log-in";
   public const string Logout = "/log-out";
   public const string Profile = "/profile";
