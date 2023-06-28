@@ -17,12 +17,7 @@
     </ul>
   }
 } else {
-  <p>You are not logged in. Try logging in as one of the following users, all of whom have a password of <code>1</code>...</p>
-  <ul style="list-style-type: none">
-    <li><code>admin@a.com</code> - global admin user</li>
-    <li><code>companyadmin@a.com</code> - admin company user</li>
-    <li><code>flunky1@a.com</code> and <code>flunky2@a.com</code> - both regular company users</li>
-  </ul>
+  <p>You are not logged in.</p>
 }
 
 <h2>Access restrictions</h2>
@@ -43,8 +38,14 @@
 <h2>Things to do</h2>
 <ul>
   <li>Store the company Id in a claim, to avoid having to hit the database when we want it</li>
-  <li>Show a list of all users on the home page</li>
   <li>Split the roles and permissions. Have each as an enum rather than strings</li>
   <li>Build a <code>UserHelper</code> class that abstracts away all the nitty-gritty code of getting roles and permissions. That way the individual pages don't need to repeat the same code</li>
-  <li>Check if we can set a policy attribute that references multiple claims. If not, we'll need to work out how to handle dit/view permissions</li>
+  <li>Check if we can set a policy attribute that references multiple claims. If not, we'll need to work out how to handle edit/view permissions</li>
 </ul>
+
+<style>
+  h2 {
+    border-top: 1px solid rgb(4, 4, 128);
+    padding-top: 3px;
+  }
+</style>

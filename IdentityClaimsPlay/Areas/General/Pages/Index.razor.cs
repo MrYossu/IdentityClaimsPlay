@@ -4,7 +4,13 @@ namespace IdentityClaimsPlay.Areas.General.Pages;
 
 public partial class Index {
   [Inject]
+  public AppDbContext Context { get; set; } = null!;
+
+  [Inject]
   public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
+
+  //[Inject]
+
 
   private ClaimsPrincipal _me = null!;
   private string Role { get; set; } = "";

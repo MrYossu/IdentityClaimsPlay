@@ -18,6 +18,10 @@ public partial class UserList {
     // As this page is authed, we know that the user must be logged in, so are safe with the ! operator on the next line
     User meUser = await Context.Users.Include(u => u.Company).SingleAsync(u => u.Email == me.Identity!.Name);
     _users = (await Context.Users.Include(u => u.Company).Where(u => string.IsNullOrWhiteSpace(meUser.CompanyId) || u.CompanyId == meUser.CompanyId).ToListAsync()).OrderBy(u => u.Company?.Name ?? "").ThenBy(u => u.Email).ToList();
+    foreach (User user in _users) {
+      user.Role = (await Context.UserClaims.SingleAsync(c => c.UserId == user.Id && c.ClaimType == ClaimsHelper.UserRole)).ClaimValue.SplitCamelCase();
+      user.Claims = await Context.UserClaims.Where(c => c.UserId == user.Id && c.ClaimType != ClaimsHelper.UserRole).Select(c => c.ClaimValue.SplitCamelCase(true)).ToListAsync();
+    }
     CompanyName = meUser.Company?.Name ?? "";
   }
 }

@@ -5,15 +5,24 @@
 <h1>Users@(string.IsNullOrWhiteSpace(CompanyName) ? "" : $" for {CompanyName}")</h1>
 
 <p>Click on a user to see details or <a href="@(RouteHelper.UserDetails)new">add a new user</a></p>
-<table class="table w-25">
-  <tr>
-    <th>Email</th>
-    <th>Company</th>
-  </tr>
-  @foreach (User user in _users) {
+
+<table class="table">
+  <thead>
     <tr>
-      <td><a href="@(RouteHelper.UserDetails + user.Id)">@user.Email</a></td>
-      <td>@(user.Company is not null ? user.Company.Name : "Global admin")</td>
+      <th>Email</th>
+      <th>Company</th>
+      <th>Role</th>
+      <th>Permissions(s)</th>
     </tr>
-  }
+  </thead>
+  <tbody>
+    @foreach (User user in _users) {
+      <tr>
+        <td><a href="@(RouteHelper.UserDetails + user.Id)">@user.Email</a></td>
+        <td>@(user.Company is not null ? user.Company.Name : "Global admin")</td>
+        <td>@user.Role</td>
+        <td>@user.Claims.JoinStr()</td>
+      </tr>
+    }
+  </tbody>
 </table>
