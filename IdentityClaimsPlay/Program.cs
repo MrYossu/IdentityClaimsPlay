@@ -29,7 +29,6 @@ builder.Services.AddAuthorization(options => {
   options.AddPolicy(ClaimsHelper.UserRoleCardIssuerAdmin, policyBuilder => 
     policyBuilder.RequireAssertion(ctx => ctx.User.HasClaim(claim => claim is { Type: ClaimsHelper.UserRole, Value: ClaimsHelper.UserRoleAdmin } or { Type: ClaimsHelper.UserRole, Value: ClaimsHelper.UserRoleCardIssuerAdmin })));
   // Add a policy for each permission
-  // TODO AYS - This isn't right. If someone has permission to edit something, we can assume they are allowed to view it, whereas this approach would prevent us from allowing them to view and edit
   foreach (string permission in ClaimsHelper.AllPermissions) {
     options.AddPolicy(permission, policyBuilder =>
       policyBuilder.RequireAssertion(ctx => ctx.User.HasClaim(claim => (claim.Type == ClaimsHelper.UserRole && claim.Value != ClaimsHelper.UserRoleCardIssuerUser) || claim.Value == permission)));
