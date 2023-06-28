@@ -39,3 +39,12 @@
   <dt>TODO - Donor list and details</dt>
   <dd>All admins, and flunkies with donor permissions can view. Only flunkies with edit donor permissions can edit</dd>
 </dl>
+
+<h2>Things to do</h2>
+<ul>
+  <li>Store the company Id in a claim, to avoid having to hit the database when we want it</li>
+  <li>Show a list of all users on the home page</li>
+  <li>Split the roles and permissions. Have each as an enum rather than strings</li>
+  <li>Build a <code>UserHelper</code> class that abstracts away all the nitty-gritty code of getting roles and permissions. That way the individual pages don't need to repeat the same code</li>
+  <li>Check if we can set a policy attribute that references multiple claims. If not, we'll need to work out how to handle dit/view permissions</li>
+</ul>
