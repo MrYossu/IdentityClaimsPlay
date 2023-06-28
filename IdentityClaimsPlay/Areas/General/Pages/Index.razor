@@ -37,6 +37,8 @@
 
 <h2>Things to do</h2>
 <ul>
+  <li>See if we can link directly from the <code>User</code> to the associated claims, instead of having to load them separately from the context</li>
+  <li>Show or hide nav links depending on the user's permissions</li>
   <li>Store the company Id in a claim, to avoid having to hit the database when we want it</li>
   <li>Split the roles and permissions. Have each as an enum rather than strings</li>
   <li>Build a <code>UserHelper</code> class that abstracts away all the nitty-gritty code of getting roles and permissions. That way the individual pages don't need to repeat the same code</li>
