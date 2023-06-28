@@ -9,7 +9,11 @@
   <h1><span class="fa fa-sign-in-alt" aria-hidden="true"></span> Log in</h1>
   <form id="account" method="post" class="w-25">
     <div class="form-floating mb-3">
-      <input type="email" asp-for="Input.Email" class="form-control" id="floatingInput" placeholder="name@example.com">
+      <select asp-for="Input.Email" class="form-control" id="floatingInput">
+        @foreach(User user in Model.Users) {
+          <option value="@user.Email">@user.Email (@user.Company?.Name)</option>
+        }
+      </select>
       <label for="floatingInput">Email address</label>
       <span asp-validation-for="Input.Email" class="text-danger"></span>
     </div>

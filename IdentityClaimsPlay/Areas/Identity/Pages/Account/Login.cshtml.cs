@@ -7,12 +7,16 @@ namespace IdentityClaimsPlay.Areas.Identity.Pages.Account;
 [AllowAnonymous]
 public class LoginModel : PageModel {
   private readonly SignInManager<User> _signInManager;
+  private readonly AppDbContext _appDbContext;
   private readonly ILogger<LoginModel> _logger;
 
-  public LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger) {
+  public LoginModel(SignInManager<User> signInManager, AppDbContext appDbContext, ILogger<LoginModel> logger) {
     _signInManager = signInManager;
+    _appDbContext = appDbContext;
     _logger = logger;
   }
+
+  public List<User> Users { get; set; } = new();
 
   [BindProperty]
   public InputModel Input { get; set; } = new();
@@ -27,13 +31,14 @@ public class LoginModel : PageModel {
 
     [Required]
     [DataType(DataType.Password)]
-    public string Password { get; set; } = "";
+    public string Password { get; set; } = "1";
   }
 
-  public void OnGet() {
+  public async Task OnGetAsync() {
     if (!string.IsNullOrEmpty(ErrorMessage)) {
       ModelState.AddModelError(string.Empty, ErrorMessage);
     }
+    Users = await _appDbContext.Users.Include(u => u.Company).OrderBy(u => u.Company.Name).ThenBy(u => u.Email).ToListAsync();
   }
 
   public async Task<IActionResult> OnPostAsync() {
