@@ -19,10 +19,16 @@ public partial class CharityDetails {
   private bool _loaded;
   private Company _company = null!;
   private Charity? _charity;
+  private bool _canEdit;
+  private string _disabled = "";
 
   protected override async Task OnInitializedAsync() {
     string email = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User.Identity.Name;
     User me = await Context.Users.SingleAsync(u => u.Email == email);
+    List<string> myPermissions = await Context.UserClaims.Where(c => c.UserId == me.Id && c.ClaimType != ClaimsHelper.UserRole).Select(c => c.ClaimValue ?? "").ToListAsync();
+    _canEdit = myPermissions.Any(p => p == ClaimsHelper.UserCanEditCharities);
+    _disabled = _canEdit ? "" : "disabled";
+    Console.WriteLine($"Perms: {myPermissions.JoinStr()}");
     _company = await Context.Companies.SingleAsync(c => c.Id == me.CompanyId);
   }
 
