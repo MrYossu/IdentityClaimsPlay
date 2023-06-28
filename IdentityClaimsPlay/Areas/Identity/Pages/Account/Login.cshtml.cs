@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace IdentityClaimsPlay.Areas.Identity.Pages.Account;
 
@@ -43,19 +44,25 @@ public class LoginModel : PageModel {
 
   public async Task<IActionResult> OnPostAsync() {
     if (ModelState.IsValid) {
-      Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, false, true);
-      if (result.Succeeded) {
-        _logger.LogInformation("User logged in.");
+      User? user = await _appDbContext.Users.Include(u => u.Company).SingleOrDefaultAsync(u => u.Email == Input.Email);
+      if (user == null) {
+        ModelState.AddModelError(string.Empty, "Invalid login attempt");
+        return Page();
+      }
+      //User? user2 = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
+      SignInResult credsCorrect = await _signInManager.CheckPasswordSignInAsync(user, Input.Password, false);
+      if (credsCorrect.Succeeded) {
+        Claim[] customClaims = { new(ClaimsHelper.CompanyId, user.CompanyId ?? ""), new(ClaimsHelper.CompanyName, user.Company?.Name ?? "") };
+        await _signInManager.SignInWithClaimsAsync(user, true, customClaims);
         return LocalRedirect("/");
       }
-      if (result.IsLockedOut) {
+      if (credsCorrect.IsLockedOut) {
         _logger.LogWarning("User account locked out.");
         return RedirectToPage("./Lockout");
       }
-      ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+      ModelState.AddModelError(string.Empty, "Invalid login attempt");
       return Page();
     }
-
     // If we got this far, something failed, redisplay form
     return Page();
   }

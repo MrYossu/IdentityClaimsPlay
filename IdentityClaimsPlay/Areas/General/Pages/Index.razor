@@ -8,6 +8,9 @@
 <h2>Your details</h2>
 @if (_me.Identity?.IsAuthenticated ?? false) {
   <p>You are logged in as <code>@_me.Identity?.Name</code>, and have the role <code>@Role.SplitCamelCase()</code></p>
+  @if (!string.IsNullOrWhiteSpace(_companyName)) {
+    <p>You are associated with @_companyName</p>
+  }
   @if (Role == ClaimsHelper.UserRoleCardIssuerUser) {
     <p>You have the following permission(s)...</p>
     <ul>
@@ -38,7 +41,6 @@
 <h2>Things to do</h2>
 <ul>
   <li>See if we can link directly from the <code>User</code> to the associated claims, instead of having to load them separately from the context</li>
-  <li>Store the company Id in a claim, to avoid having to hit the database when we want it</li>
   <li>Split the roles and permissions. Have each as an enum rather than strings</li>
   <li>Build a <code>UserHelper</code> class that abstracts away all the nitty-gritty code of getting roles and permissions. That way the individual pages don't need to repeat the same code</li>
 </ul>

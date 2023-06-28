@@ -33,4 +33,8 @@ public class ClaimsHelper {
       UserCanViewDonors,
       UserCanEditDonors
     };
+
+  // Claims for their company
+  public const string CompanyId = "CompanyId";
+  public const string CompanyName = "CompanyName";
 }
