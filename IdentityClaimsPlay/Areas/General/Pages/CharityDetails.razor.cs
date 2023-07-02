@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
-
-namespace IdentityClaimsPlay.Areas.General.Pages;
+﻿namespace IdentityClaimsPlay.Areas.General.Pages;
 
 [Authorize(Policy = ClaimsHelper.UserCanViewCharities)]
 public partial class CharityDetails {
@@ -11,23 +9,21 @@ public partial class CharityDetails {
   public AppDbContext Context { get; set; } = null!;
 
   [Inject]
-  public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
+  public NavigationManager NavigationManager { get; set; } = null!;
 
   [Inject]
-  public NavigationManager NavigationManager { get; set; } = null!;
+  public UserHelper UserHelper { get; set; } = null!;
 
   private bool _loaded;
   private Company _company = null!;
   private Charity? _charity;
   private bool _canEdit;
-  private string _disabled = "";
 
   protected override async Task OnInitializedAsync() {
-    string email = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User.Identity.Name;
+    string email = UserHelper.Email;
     User me = await Context.Users.SingleAsync(u => u.Email == email);
-    List<string> myPermissions = await Context.UserClaims.Where(c => c.UserId == me.Id && c.ClaimType != ClaimsHelper.UserRole).Select(c => c.ClaimValue ?? "").ToListAsync();
+    List<string> myPermissions = UserHelper.Claims.Select(c=>c.Value).ToList();
     _canEdit = myPermissions.Any(p => p == ClaimsHelper.UserCanEditCharities);
-    _disabled = _canEdit ? "" : "disabled";
     Console.WriteLine($"Perms: {myPermissions.JoinStr()}");
     _company = await Context.Companies.SingleAsync(c => c.Id == me.CompanyId);
   }

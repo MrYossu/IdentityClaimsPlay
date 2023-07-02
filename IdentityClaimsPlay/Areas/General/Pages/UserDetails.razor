@@ -20,7 +20,7 @@
                              ValueField="Value"
                              Width="300px" />
       </h3>
-      @if (Role == ClaimsHelper.UserRoleAdmin && _model.Role != ClaimsHelper.UserRoleAdmin) {
+      @if (UserHelper.Role == ClaimsHelper.UserRoleAdmin && _model.Role != ClaimsHelper.UserRoleAdmin) {
         <h3>
           Company:
           <TelerikDropDownList Data="@_companies"

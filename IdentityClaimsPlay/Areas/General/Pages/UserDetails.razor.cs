@@ -13,8 +13,8 @@ public partial class UserDetails {
   [Inject]
   public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
 
-  private ClaimsPrincipal _me = null!;
-  private string Role { get; set; } = "";
+  [Inject]
+  public UserHelper UserHelper { get; set; } = null!;
 
   [Inject]
   public UserManager<User> UserManager { get; set; } = null!;
@@ -30,11 +30,8 @@ public partial class UserDetails {
   private List<NameValuePair> _companies = new();
   private readonly List<NameValuePair> _roles = ClaimsHelper.AllRoles.Select(p => new NameValuePair(p, p)).ToList();
 
-  protected override async Task OnInitializedAsync() {
-    _me = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
-    Role = _me.Claims.Single(c => c.Type == ClaimsHelper.UserRole).Value;
+  protected override async Task OnInitializedAsync() =>
     _companies = (await Context.Companies.OrderBy(c => c.Name).ToListAsync()).Select(c => new NameValuePair(c.Name, c.Id)).ToList();
-  }
 
   protected override async Task OnParametersSetAsync() {
     if (Id == "new") {

@@ -6,15 +6,17 @@
 <p>See <a href="https://github.com/MrYossu/IdentityClaimsPlay" target="_blank">the project page</a> for more details of what's going on here</p>
 
 <h2>Your details</h2>
-@if (_me.Identity?.IsAuthenticated ?? false) {
-  <p>You are logged in as <code>@_me.Identity?.Name</code>, and have the role <code>@Role.SplitCamelCase()</code></p>
-  @if (!string.IsNullOrWhiteSpace(_companyName)) {
-    <p>You are associated with @_companyName</p>
-  }
-  @if (Role == ClaimsHelper.UserRoleCardIssuerUser) {
+@if (UserHelper.IsAuthed) {
+  <p>
+    You are logged in as <code>@UserHelper.Email</code>, and have the role <code>@UserHelper.Role.SplitCamelCase()</code>
+    @if (!UserHelper.GlobalAdmin) {
+      <span> and are associated with @UserHelper.CompanyName</span>
+    }
+    </p>
+  @if (UserHelper.Role == ClaimsHelper.UserRoleCardIssuerUser) {
     <p>You have the following permission(s)...</p>
     <ul>
-      @foreach (var claim in _me.Claims.Where(c => c.Type == ClaimsHelper.UserPermission)) {
+      @foreach (Claim claim in UserHelper.Claims) {
         <li>@claim.Value.SplitCamelCase()</li>
       }
     </ul>

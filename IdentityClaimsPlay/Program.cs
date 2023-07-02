@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContextFactory<AppDbContext>(options => {
   options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -37,6 +35,8 @@ builder.Services.AddAuthorization(options => {
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+
+builder.Services.AddTransient<UserHelper>();
 
 WebApplication app = builder.Build();
 
