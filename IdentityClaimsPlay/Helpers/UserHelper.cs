@@ -3,7 +3,7 @@
 namespace IdentityClaimsPlay.Helpers;
 
 public class UserHelper {
-  public UserHelper(AuthenticationStateProvider authenticationStateProvider, AppDbContext context) {
+  public UserHelper(AuthenticationStateProvider authenticationStateProvider) {
     ClaimsPrincipal principal = authenticationStateProvider.GetAuthenticationStateAsync().Result.User;
     IsAuthed = principal.Identity?.IsAuthenticated ?? false;
     if (IsAuthed) {
