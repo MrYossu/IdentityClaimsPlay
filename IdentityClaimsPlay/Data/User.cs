@@ -9,6 +9,5 @@ public class User : IdentityUser {
   [NotMapped]
   public string Role { get; set; } = "";
 
-  [NotMapped]
-  public List<string> Claims { get; set; } = new();
+  public virtual ICollection<IdentityUserClaim<string>> Claims { get; set; }
 }
