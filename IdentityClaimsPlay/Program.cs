@@ -1,4 +1,5 @@
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddDbContextFactory<AppDbContext>(options => {
   options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
   options.EnableSensitiveDataLogging();

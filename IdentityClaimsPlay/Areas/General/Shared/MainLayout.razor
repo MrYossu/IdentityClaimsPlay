@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@inject IDbContextFactory<AppDbContext> ContextFactory
+@inject NavigationManager NavManager
 @inject UserHelper UserHelper
 
 <TelerikRootComponent>
@@ -22,17 +24,25 @@
       </div>
 
       <article class="content px-4">
-        @Body
+        <CascadingValue Value="@_companyInfo">
+          @Body
+        </CascadingValue>
       </article>
     </main>
   </div>
 </TelerikRootComponent>
 
 @code {
+  private CompanyInfo _companyInfo = new("", "", "");
 
-
-  protected override async Task OnParametersSetAsync() {
-    
+  protected override async Task OnInitializedAsync() {
+    if (string.IsNullOrWhiteSpace(_companyInfo.Id)) {
+      string domain = NavManager.BaseUri.Replace("https://", "").Replace("/", "");
+      Company? company = await (await ContextFactory.CreateDbContextAsync()).Companies.SingleOrDefaultAsync(c => c.Domain == domain);
+      if (company is not null) {
+        _companyInfo = new(company.Id, company.Name, company.Domain);
+      }
+    }
   }
 
 }
