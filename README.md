@@ -4,29 +4,52 @@
 
 Part of a project I'm starting requires us to allow the users to set permissions to control what other users can do on the site. I had previously used roles for this, but it was getting a bit cumbersome, and Microsoft seem to recommend going with claims anyway, so I decided to have a play around with this and see if I could get it all working.
 
-The project is a web site that will be used by many companies. We need three user types...
-- A global admin user role, who can see and edit all data, including adding and editing companies
+### Solution overview
+The project is a set of web sites that will be used by many companies. Each company will have the following portals:
+- A CRM, where they can see and modify their own company data and their customers' data
+- A customer portal, where customers can log in and see thier data
+- An accountant portal, where their accountant can log in and generate reports
+
+In addition, there will be a global admin portal, where the global company running this whole operation can manage the individual companies.
+
+The fun bit is that an individual user may need multiple roles. For example, an accountant may do the accounts for more than one company, so needs to be able to log in to multiple accountant portals (but not all of them). At the same time, the accountant may well be a customer of one of the companies, so needs to log in to a customer portal, but be recognised there as a customer, not an accountant.
+
+I am making the assumption that only company users will log in to the CRM, only customers will log in to the customer portal, and only accountants will log in to the accountants portal. This means that the log-in page of each portal can look for a user with the email supplied, and a known role, based on the individual portal.
+
+I will also need to account for the fact that the same code base will serve all companies, so I will need to know which company is relevant when logging in
+
+### User types
+Following on from this, we need the following user types...
+- Global admin users, who can see and edit all data, including adding and editing companies
 - Company admins, who can see and edit data relevant to their company, but not global data, nor data relevant to other companies
 - Regular company users (referred to round here as _[flunkies](https://dictionary.cambridge.org/dictionary/english/flunky)_), who have limited permissions over their own company data. They may be able to view but not edit data, or they may be able to edit certain sets of data but not others. Their specific permissions are to be set by their company admin.
+- Customers of individual companies, confusingly called donors in the code (don't ask, it's a long and not very interesting story!)
 
-My first stab at this is to have two types of claims, one confusingly named `UserRole` (not to be confused with ASP.NET Core `Roles`), and one named `UserPermission`. The former specifies which of the three user types is applicable. A user should always have exactly one of these claims. The latter type of claims is only relevant for flunkies, and specifies which specific actions they can perform.
+I'm approaching this by setting up claims:
+- Each user will have at least one claim whose name is one of the `Roles` enum values. As exlained above, the reason they can have multiple roles is that they may need to log in to different portals in different roles, eg into the CRM as a company user and into an accountant portal as an accountant.
+- Depending on the type of user, they may also have claims whose name is one of the `Permissions` enum values. This is probably only going to be relevant to flunkies, as global admins and company adminshave full control over their relevant portals. Accountants will only be generating reports, not changing data, so will pobably not need individual permissions.
+- There will also need to be claims for the company info, so we know which company is relevant. **Update:** Looks like this might not be necessary, as I have just added a cascading parameter that makes the company info available to all components in the portal, so we won't need to set this as a user claim.
 
->I'm wondering if I should use two identities, one for the user's role, and a separate on for permissions. It seems that this is basically what multiple identities are for, but it does seem like overkill, especially as the two concepts are so closely related. I'm continuing with my original approach for the moment, but will keep this point in mind.
+The code will add a user with email `admin@a.com` who is a global admin user. Once logged in with that email (password is `1`), that user can add other users.
 
-### Objectives
-- Set up the three types of user described above
-- Set up user roles and permissions
-- Allow a global admin to add, edit and delete users of any type
-- Allow company admins to add, edit and delete company admins and flunkies for their company
-- Ensure that company-specific users can only see or do what they are supposed to be allowed to see and do
-
-The code will add four users...
-- `admin@a.com` - a global admin user
-- `companyadmin@a.com` - a company admin user
-- `flunky1@a.com` and `flunky2@a.com` - two flunky users
+### Things to do
+- Add a global admin site 
+- Make it clear that the web site in the project now is the CRM
+- Add a customers (donors) list and details page to the CRM
+- Add a customer portal
+- Add an accountant portal
 
 ### Notes for anyone intending to clone this repo
-1. I use the rather excellent [Telerik UI for Blazor](https://www.telerik.com/blazor-ui) components(*), which are referenced in this sample project. If you don't have a licence for this, you can either get a free trial, or just modify the pages that use Telerik controls to use regular Blazor controls. As I intend to lift large parts of this code into the real application, I started off using Telerik in the sample.
-2. As this is a sample, all users will have the stupendously secure password of `1`. If you copy any of this code into a real app, don't forget to tighten up the password rules in `Program.cs`! Specifically, set `options.Password.RequiredLength` to a [sensible length](https://blog.codinghorror.com/password-rules-are-bullshit/).
+I use the rather excellent [Telerik UI for Blazor](https://www.telerik.com/blazor-ui) components(*), which are referenced in this sample project. If you don't have a licence for this, you can either get a free trial, or just modify the pages that use Telerik controls to use regular Blazor controls. As I intend to lift large parts of this code into the real application, I started off using Telerik in the sample.
+
+As this is a sample, all users will have the stupendously secure password of `1`. If you copy any of this code into a real app, don't forget to tighten up the password rules in `Program.cs`! Specifically, set `options.Password.RequiredLength` to a [sensible length](https://blog.codinghorror.com/password-rules-are-bullshit/). Actually, I changed it so that logging in doesn't even require you to enter a password. This was done for ease of switching users, so don't try it on a production site!
+
+When you first run the global admin site (not yet added, but you can do this from the CRM portal), you'll need to add at least one company, and set the `Domain` property to something like `companya:5153`, where `companya` is the fake company domain you'll add to your `hosts` file (see below) and `5153` is the port that the site runs on when you debug in Visual Studio.
+
+In order to play wih this properly, you need to simulate multiple sites. The easiest way to do this is to add some lines to your `hosts` file, which you can find in `C:\Windows\System32\drivers\etc`. You'll need to run Notepad as administrator to be able to edit this file.For each company that you want to simulate, add a line like...
+
+`127.0.0.1 companya`
+
+...to the file. Then when the app runs, change `localhost` to `companya` (or whatever you named it), leaving the port number intact. This should run the web site for that company. You should be able to navigate to `http://companya:5153` in your web browser (using the domain name and port you specified earlier). Note that I coudln't get this to work with HTTPS, but as it's only for development, that doesn't matter.
 
 (*) No, I don't work for Telerik, nor do I have any affiliation with them. I'm just a satisifed customer!

@@ -66,14 +66,8 @@ app.MapFallbackToAreaPage("/_Host", "General");
 // Identity
 using IServiceScope serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
 UserManager<User> userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<User>>();
-// Overall admin, access to all areas, can do anything
+// Global admin, access to all areas, can do anything. Other users can be added when you log in as global admin
 await AddUser("admin@a.com", "1", Roles.Admin);
-// Card issuer access, access to most areas, can edit any data for his card issuer, but cannot see or edit data for other card issuers
-await AddUser("companyadmin@a.com", "1", Roles.CardIssuerAdmin);
-// Regular card issuer user, will only have access to specific areas as set up by the card issuer admin. Initially he can view donors and charities, but can't edit
-await AddUser("flunky1@a.com", "1", Roles.CardIssuerUser, Permissions.CanViewCharities, Permissions.CanViewDonors);
-// A more privileged regular card issuer user, can view and edit both donors and charities
-await AddUser("flunky2@a.com", "1", Roles.CardIssuerUser, Permissions.CanViewCharities, Permissions.CanEditCharities, Permissions.CanViewDonors, Permissions.CanEditDonors);
 
 app.Run();
 
