@@ -6,6 +6,7 @@ Part of a project I'm starting requires us to allow the users to set permissions
 
 ### Solution overview
 The project is a set of web sites that will be used by many companies. Each company will have the following portals:
+- A global admin portal to be used by the company that runs the whole operation. Global admin suers would be able to add, edit and delete the individual companies who will use the other portals
 - A CRM, where they can see and modify their own company data and their customers' data
 - A customer portal, where customers can log in and see thier data
 - An accountant portal, where their accountant can log in and generate reports
