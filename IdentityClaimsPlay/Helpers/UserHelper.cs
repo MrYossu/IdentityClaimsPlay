@@ -10,7 +10,7 @@ public class UserHelper {
       Email = principal.Identity!.Name;
       Role = Enum.TryParse(principal.FindFirst(ClaimsHelper.UserRole)?.Value ?? "", out Roles role) ? role : Roles.CardIssuerUser;
       GlobalAdmin = Role == Roles.Admin;
-      Claims = principal.Claims.Where(c => c.Type == ClaimsHelper.UserPermission).ToList();
+      Permissions = principal.Claims.Where(c => c.Type == ClaimsHelper.UserPermission).ToList();
       CompanyId = principal.FindFirst(ClaimsHelper.CompanyId)?.Value ?? "";
       CompanyName = principal.FindFirst(ClaimsHelper.CompanyName)?.Value ?? "";
     }
@@ -22,7 +22,7 @@ public class UserHelper {
   public string RoleStr => Role.ToString().SplitCamelCase();
   public bool GlobalAdmin { get; set; }
 
-  public List<Claim> Claims { get; set; } = new();
+  public List<Claim> Permissions { get; set; } = new();
   public string CompanyId { get; set; } = "";
   public string CompanyName { get; set; } = "";
 }
