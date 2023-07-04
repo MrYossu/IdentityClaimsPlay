@@ -49,7 +49,6 @@ public class LoginModel : PageModel {
         ModelState.AddModelError(string.Empty, "Invalid login attempt");
         return Page();
       }
-      //User? user2 = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
       SignInResult credsCorrect = await _signInManager.CheckPasswordSignInAsync(user, Input.Password, false);
       if (credsCorrect.Succeeded) {
         Claim[] customClaims = { new(ClaimsHelper.CompanyId, user.CompanyId ?? ""), new(ClaimsHelper.CompanyName, user.Company?.Name ?? "") };
