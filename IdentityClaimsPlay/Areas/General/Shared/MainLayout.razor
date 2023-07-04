@@ -1,5 +1,5 @@
 ﻿@inherits LayoutComponentBase
-@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserHelper UserHelper
 
 <TelerikRootComponent>
   <PageTitle>Identity Claims Play</PageTitle>
@@ -12,11 +12,11 @@
     <main>
       <div class="top-row px-4">
         <CascadingAuthenticationState>
-          @if (string.IsNullOrWhiteSpace(_user.Identity?.Name)) {
-            <a href="@RouteHelper.Login" class="w-auto"><span class="@IconsHelper.LogIn float-start me-2"></span> Log in</a>
-          } else {
-            <div>@_user.Identity?.Name</div>
+          @if (UserHelper?.IsAuthed ?? false) {
+            <div>@UserHelper.Email</div>
             <a href="@RouteHelper.Logout" class="w-auto"><span class="@IconsHelper.LogOut float-start me-2"></span> Log out</a>
+          } else {
+            <a href="@RouteHelper.Login" class="w-auto"><span class="@IconsHelper.LogIn float-start me-2"></span> Log in</a>
           }
         </CascadingAuthenticationState>
       </div>
@@ -30,9 +30,9 @@
 
 @code {
 
-  ClaimsPrincipal _user = null!;
 
-  protected override async Task OnParametersSetAsync() =>
-    _user = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+  protected override async Task OnParametersSetAsync() {
+    
+  }
 
 }
