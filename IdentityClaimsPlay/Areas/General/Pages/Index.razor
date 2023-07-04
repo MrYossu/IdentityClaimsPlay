@@ -8,12 +8,12 @@
 <h2>Your details</h2>
 @if (UserHelper.IsAuthed) {
   <p>
-    You are logged in as <code>@UserHelper.Email</code>, and have the role <code>@UserHelper.Role.SplitCamelCase()</code>
+    You are logged in as <code>@UserHelper.Email</code>, and have the role <code>@UserHelper.RoleStr</code>
     @if (!UserHelper.GlobalAdmin) {
       <span> and are associated with @UserHelper.CompanyName</span>
     }
     </p>
-  @if (UserHelper.Role == ClaimsHelper.UserRoleCardIssuerUser) {
+  @if (UserHelper.Role == Roles.CardIssuerUser) {
     <p>You have the following permission(s)...</p>
     <ul>
       @foreach (Claim claim in UserHelper.Claims) {

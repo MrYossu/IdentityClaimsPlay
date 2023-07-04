@@ -1,6 +1,6 @@
 ﻿namespace IdentityClaimsPlay.Areas.General.Pages;
 
-[Authorize(Policy = ClaimsHelper.UserCanViewCharities)]
+[AuthoriseByPermission(Permissions.CanViewCharities)]
 public partial class CharityDetails {
   [Parameter]
   public string Id { get; set; } = "";
@@ -23,8 +23,7 @@ public partial class CharityDetails {
     string email = UserHelper.Email;
     User me = await Context.Users.SingleAsync(u => u.Email == email);
     List<string> myPermissions = UserHelper.Claims.Select(c=>c.Value).ToList();
-    _canEdit = myPermissions.Any(p => p == ClaimsHelper.UserCanEditCharities);
-    Console.WriteLine($"Perms: {myPermissions.JoinStr()}");
+    _canEdit = myPermissions.Any(p => p == Permissions.CanEditCharities.ToString());
     _company = await Context.Companies.SingleAsync(c => c.Id == me.CompanyId);
   }
 

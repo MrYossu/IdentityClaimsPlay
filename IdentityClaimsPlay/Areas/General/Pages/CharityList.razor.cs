@@ -1,6 +1,6 @@
 ﻿namespace IdentityClaimsPlay.Areas.General.Pages;
 
-[Authorize(Policy = ClaimsHelper.UserCanViewCharities)]
+[AuthoriseByPermission(Permissions.CanViewCharities)]
 public partial class CharityList {
   [Inject]
   public AppDbContext Context { get; set; } = null!;

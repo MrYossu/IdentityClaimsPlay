@@ -8,10 +8,13 @@
       <h1>User details for: @_model.Email</h1>
     }
 
+    <p>Roles: @_roles.Select(r=>r.Name).JoinStr()</p>
+
     <EditForm Model="@_model">
       @if (Id == "new") {
         <h3>Email: <TelerikTextBox @bind-Value="_model.Email" Width="300px" /></h3>
       }
+      @* TODO AYS - Replace this with a dropdown that binds to a Roles enum value *@
       <h3>
         Role:
         <TelerikDropDownList Data="@_roles"
@@ -20,7 +23,7 @@
                              ValueField="Value"
                              Width="300px" />
       </h3>
-      @if (UserHelper.Role == ClaimsHelper.UserRoleAdmin && _model.Role != ClaimsHelper.UserRoleAdmin) {
+      @if (UserHelper.Role == Roles.Admin && _model.Role != Roles.Admin) {
         <h3>
           Company:
           <TelerikDropDownList Data="@_companies"
@@ -30,7 +33,7 @@
                                Width="300px" />
         </h3>
       }
-      @if (_model.Role == ClaimsHelper.UserRoleCardIssuerUser) {
+      @if (_model.Role == Roles.CardIssuerUser) {
         <h3>Permissions</h3>
         <p>Note that (at the moment at least) it is up to you to make sure you don't give a user permission to edit something that they can't see! It would be nice if we could make it so that granting edit permission automatically granted view permission, and revoking view permission automatically revoked edit permission, but I haven't thought of a way of doing that yet.</p>
         <ul style="list-style-type: none">

@@ -8,8 +8,8 @@ public class UserHelper {
     IsAuthed = principal.Identity?.IsAuthenticated ?? false;
     if (IsAuthed) {
       Email = principal.Identity!.Name;
-      Role = principal.FindFirst(ClaimsHelper.UserRole)?.Value ?? "";
-      GlobalAdmin = Role == ClaimsHelper.UserRoleAdmin;
+      Role = Enum.TryParse(principal.FindFirst(ClaimsHelper.UserRole)?.Value ?? "", out Roles role) ? role : Roles.CardIssuerUser;
+      GlobalAdmin = Role == Roles.Admin;
       Claims = principal.Claims.Where(c => c.Type == ClaimsHelper.UserPermission).ToList();
       CompanyId = principal.FindFirst(ClaimsHelper.CompanyId)?.Value ?? "";
       CompanyName = principal.FindFirst(ClaimsHelper.CompanyName)?.Value ?? "";
@@ -18,7 +18,8 @@ public class UserHelper {
 
   public bool IsAuthed { get; set; }
   public string Email { get; set; } = "";
-  public string Role { get; set; } = "";
+  public Roles Role { get; set; }
+  public string RoleStr => Role.ToString().SplitCamelCase();
   public bool GlobalAdmin { get; set; }
 
   public List<Claim> Claims { get; set; } = new();

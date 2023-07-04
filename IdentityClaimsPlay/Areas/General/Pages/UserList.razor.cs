@@ -1,6 +1,6 @@
 ﻿namespace IdentityClaimsPlay.Areas.General.Pages;
 
-[Authorize(Policy = ClaimsHelper.UserRoleCardIssuerAdmin)]
+[AuthoriseByRole(Roles.CardIssuerAdmin)]
 public partial class UserList {
   [Inject]
   public AppDbContext Context { get; set; } = null!;

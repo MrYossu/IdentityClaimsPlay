@@ -15,23 +15,23 @@
           <span class="@IconsHelper.House me-2" aria-hidden="true"></span> Home
         </NavLink>
 
-        <AuthorizeView Policy="@ClaimsHelper.UserRoleAdmin">
+        <AuthorizeViewRole Role="@Roles.Admin">
           <NavLink class="nav-link" href="@RouteHelper.CompanyList" Match="NavLinkMatch.All">
             <span class="@IconsHelper.Building me-2" aria-hidden="true"></span> Companies
           </NavLink>
-        </AuthorizeView>
+        </AuthorizeViewRole>
 
-        <AuthorizeView Policy="@ClaimsHelper.UserRoleCardIssuerAdmin">
+        <AuthorizeViewRole Role="@Roles.CardIssuerAdmin">
           <NavLink class="nav-link" href="@RouteHelper.UserList" Match="NavLinkMatch.All">
             <span class="@IconsHelper.Users me-2" aria-hidden="true"></span> Users
           </NavLink>
-        </AuthorizeView>
+        </AuthorizeViewRole>
 
-        <AuthorizeView Policy="@ClaimsHelper.UserCanViewCharities">
+        <AuthorizeViewPermission Permission="@Permissions.CanViewCharities">
         <NavLink class="nav-link" href="@RouteHelper.CharityList" Match="NavLinkMatch.All">
           <span class="@IconsHelper.HandHoldingHeart me-2" aria-hidden="true"></span> Charities
         </NavLink>
-        </AuthorizeView>
+        </AuthorizeViewPermission>
       </div>
     </nav>
   </div>

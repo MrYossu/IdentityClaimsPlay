@@ -20,7 +20,7 @@
       <tr>
         <td><a href="@(RouteHelper.UserDetails + user.Id)">@user.Email</a></td>
         <td>@(user.Company is not null ? user.Company.Name : "Global admin")</td>
-        <td>@user.Claims.Single(c=>c.ClaimType == ClaimsHelper.UserRole).ClaimValue.SplitCamelCase()</td>
+        <td>@user.Claims.Single(c => c.ClaimType == ClaimsHelper.UserRole).ClaimValue.SplitCamelCase()</td>
         <td>@user.Claims.Where(c => c.ClaimType != ClaimsHelper.UserRole).Select(c => c.ClaimValue.SplitCamelCase()).JoinStr()</td>
       </tr>
     }

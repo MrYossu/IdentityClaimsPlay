@@ -2,7 +2,7 @@
 
 namespace IdentityClaimsPlay.Areas.General.Pages;
 
-[Authorize(Policy = ClaimsHelper.UserRoleCardIssuerAdmin)]
+[AuthoriseByRole(Roles.CardIssuerAdmin)]
 public partial class UserDetails {
   [Parameter]
   public string Id { get; set; } = "";
@@ -28,21 +28,24 @@ public partial class UserDetails {
   private readonly UserModel _model = new();
 
   private List<NameValuePair> _companies = new();
-  private readonly List<NameValuePair> _roles = ClaimsHelper.AllRoles.Select(p => new NameValuePair(p, p)).ToList();
+  private List<RoleDto> _roles = new();
 
-  protected override async Task OnInitializedAsync() =>
+  protected override async Task OnInitializedAsync() {
+    _roles = Enum.GetValues(typeof(Roles)).Cast<Roles>().Where(r => UserHelper.GlobalAdmin || r != Roles.Admin).Select(p => new RoleDto(p, p.ToString().SplitCamelCase())).ToList();
     _companies = (await Context.Companies.OrderBy(c => c.Name).ToListAsync()).Select(c => new NameValuePair(c.Name, c.Id)).ToList();
+  }
 
   protected override async Task OnParametersSetAsync() {
     if (Id == "new") {
       _user = new();
+      _model.Role = UserHelper.GlobalAdmin ? Roles.Admin : Roles.CardIssuerUser;
       _model.Permissions = ClaimsHelper.AllPermissions.Select(p => new PermissionDto(p, false)).ToList();
     } else {
       _user = await Context.Users.Include(u => u.Company).SingleOrDefaultAsync(u => u.Id == Id);
       if (_user is not null) {
         _model.Email = _user.Email ?? "";
         List<ClaimDto> claims = (await UserManager.GetClaimsAsync(_user)).Select(c => new ClaimDto(c.Type, c.Value)).ToList();
-        _model.Role = claims.Single(c => c.Type == ClaimsHelper.UserRole).Value;
+        _model.Role = Enum.TryParse(claims.Single(c => c.Type == ClaimsHelper.UserRole).Value, out Roles role) ? role : Roles.CardIssuerUser;
         _model.CompanyId = _user.CompanyId;
         _model.Permissions = ClaimsHelper.AllPermissions.Select(p => new PermissionDto(p, claims.Any(c => c.Value == p))).ToList();
       }
@@ -56,24 +59,22 @@ public partial class UserDetails {
         UserName = _model.Email,
         Email = _model.Email,
         EmailConfirmed = true,
-        CompanyId = _model.Role == ClaimsHelper.UserRoleAdmin ? null : _model.CompanyId
+        CompanyId = _model.Role == Roles.Admin ? null : _model.CompanyId
       };
       await UserManager.CreateAsync(user, "1");
-      await UserManager.AddClaimAsync(user, new Claim(ClaimsHelper.UserRole, _model.Role));
-      if (_model.Role == ClaimsHelper.UserRoleCardIssuerUser) {
+      await UserManager.AddClaimAsync(user, new Claim(ClaimsHelper.UserRole, _model.Role.ToString()));
+      if (_model.Role == Roles.CardIssuerUser) {
         foreach (string permission in _model.Permissions.Where(p => p.HasPermission).Select(p => p.Value)) {
           await UserManager.AddClaimAsync(user, new Claim(ClaimsHelper.UserPermission, permission));
         }
       }
     } else {
-      _user!.CompanyId = _model.Role == ClaimsHelper.UserRoleAdmin ? null : _model.CompanyId;
+      _user!.CompanyId = _model.Role == Roles.Admin ? null : _model.CompanyId;
       Context.Users.Update(_user);
       await Context.SaveChangesAsync();
       IList<Claim> claims = await UserManager.GetClaimsAsync(_user);
-      Console.WriteLine("Claims:");
-      claims.ForEach(c => Console.WriteLine($"  {c.Type}: {c.Value}"));
       Claim role = claims.Single(c => c.Type == ClaimsHelper.UserRole);
-      await UserManager.ReplaceClaimAsync(_user, role, new Claim(ClaimsHelper.UserRole, _model.Role));
+      await UserManager.ReplaceClaimAsync(_user, role, new Claim(ClaimsHelper.UserRole, _model.Role.ToString()));
       List<Claim> permissions = claims.Where(c => c.Type != ClaimsHelper.UserRole).ToList();
       foreach (PermissionDto dto in _model.Permissions) {
         switch (dto.HasPermission) {
@@ -89,9 +90,19 @@ public partial class UserDetails {
     NavigationManager.NavigateTo("/users");
   }
 
+  public class RoleDto {
+    public RoleDto(Roles value, string name) {
+      Value = value;
+      Name = name;
+    }
+
+    public Roles Value { get; set; }
+    public string Name { get; set; } = "";
+  }
+
   private class UserModel {
     public string Email { get; set; } = "";
-    public string Role { get; set; } = "";
+    public Roles Role { get; set; }
     public string? CompanyId { get; set; }
     public List<PermissionDto> Permissions = new();
   }

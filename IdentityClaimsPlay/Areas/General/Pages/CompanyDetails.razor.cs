@@ -1,6 +1,6 @@
 ﻿namespace IdentityClaimsPlay.Areas.General.Pages;
 
-[Authorize(Policy = ClaimsHelper.UserRoleAdmin)]
+[AuthoriseByRole(Roles.Admin)]
 public partial class CompanyDetails {
   [Parameter]
   public string Id { get; set; } = "";
