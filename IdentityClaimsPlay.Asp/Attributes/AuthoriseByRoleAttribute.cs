@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using IdentityClaimsPlay.Data.Data;
+using Microsoft.AspNetCore.Authorization;
 
-namespace IdentityClaimsPlay.Asp.Attributes; 
+namespace IdentityClaimsPlay.Asp.Attributes;
 
 public class AuthoriseByRoleAttribute : AuthorizeAttribute {
   public AuthoriseByRoleAttribute(params Roles[] roles) =>

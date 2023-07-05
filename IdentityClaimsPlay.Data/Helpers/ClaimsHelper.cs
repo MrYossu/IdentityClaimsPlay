@@ -1,17 +1,6 @@
-﻿namespace IdentityClaimsPlay.Data.Helpers;
+﻿using IdentityClaimsPlay.Data.Data;
 
-public enum Roles {
-  Admin,
-  CardIssuerAdmin,
-  CardIssuerUser
-}
-
-public enum Permissions {
-  CanViewCharities,
-  CanEditCharities,
-  CanViewDonors,
-  CanEditDonors
-}
+namespace IdentityClaimsPlay.Data.Helpers;
 
 public static class ClaimsHelper {
   // The claim name for the user role (saves us checking individual claims if they are an admin user

@@ -1,4 +1,6 @@
 ﻿
+using IdentityClaimsPlay.Data.Data;
+
 namespace IdentityClaimsPlay.Asp.Components;
 
 public class AuthorizeViewRole : AuthorizeView {

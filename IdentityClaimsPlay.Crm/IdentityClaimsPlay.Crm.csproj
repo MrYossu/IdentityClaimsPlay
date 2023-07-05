@@ -27,8 +27,4 @@
     <ProjectReference Include="..\IdentityClaimsPlay.Data\IdentityClaimsPlay.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Helpers\" />
-  </ItemGroup>
-
 </Project>

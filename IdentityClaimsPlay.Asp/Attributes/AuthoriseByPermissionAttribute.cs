@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using IdentityClaimsPlay.Data.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IdentityClaimsPlay.Asp.Attributes;
 
