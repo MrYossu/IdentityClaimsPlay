@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
-namespace IdentityClaimsPlay.Crm.Data;
+namespace IdentityClaimsPlay.Data.Data;
 
 public class User : IdentityUser {
   public string? CompanyId { get; set; }

@@ -1,4 +1,3 @@
-using IdentityClaimsPlay.Crm.Data;
 using IdentityClaimsPlay.Crm.Helpers;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);

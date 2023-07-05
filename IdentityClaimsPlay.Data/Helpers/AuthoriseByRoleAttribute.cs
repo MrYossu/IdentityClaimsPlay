@@ -1,4 +1,7 @@
-﻿namespace IdentityClaimsPlay.Crm.Helpers; 
+﻿using Microsoft.AspNetCore.Authorization;
+using Pixata.Extensions;
+
+namespace IdentityClaimsPlay.Data.Helpers; 
 
 public class AuthoriseByRoleAttribute : AuthorizeAttribute {
   public AuthoriseByRoleAttribute(params Roles[] roles) =>

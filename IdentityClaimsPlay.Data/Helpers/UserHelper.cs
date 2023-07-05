@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Components.Authorization;
+using Pixata.Extensions;
 
-namespace IdentityClaimsPlay.Crm.Helpers;
+namespace IdentityClaimsPlay.Data.Helpers;
 
 public class UserHelper {
   public UserHelper(AuthenticationStateProvider authenticationStateProvider) {

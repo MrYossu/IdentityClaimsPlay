@@ -1,5 +1,4 @@
-﻿using IdentityClaimsPlay.Crm.Data;
-using IdentityClaimsPlay.Crm.Helpers;
+﻿using IdentityClaimsPlay.Crm.Helpers;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace IdentityClaimsPlay.Crm.Areas.General.Pages;

@@ -1,4 +1,4 @@
-﻿namespace IdentityClaimsPlay.Crm.Data;
+﻿namespace IdentityClaimsPlay.Data.Data;
 
 public record NameValuePair(string Name, string Value);
 

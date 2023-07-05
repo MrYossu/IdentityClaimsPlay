@@ -1,4 +1,4 @@
-﻿namespace IdentityClaimsPlay.Crm.Helpers;
+﻿namespace IdentityClaimsPlay.Data.Helpers;
 
 public enum Roles {
   Admin,

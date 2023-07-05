@@ -1,5 +1,4 @@
-﻿using IdentityClaimsPlay.Crm.Data;
-using IdentityClaimsPlay.Crm.Helpers;
+﻿using IdentityClaimsPlay.Crm.Helpers;
 
 namespace IdentityClaimsPlay.Crm.Areas.General.Pages;
 

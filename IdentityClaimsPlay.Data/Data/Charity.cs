@@ -1,4 +1,4 @@
-﻿namespace IdentityClaimsPlay.Crm.Data; 
+﻿namespace IdentityClaimsPlay.Data.Data; 
 
 public class Charity : EntityBase {
   public string Name { get; set; } = "";

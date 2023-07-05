@@ -4,3 +4,5 @@ global using Microsoft.AspNetCore.Identity;
 global using Pixata.Extensions;
 global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.EntityFrameworkCore;
+global using IdentityClaimsPlay.Data.Data;
+global using IdentityClaimsPlay.Data.Helpers;

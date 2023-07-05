@@ -1,8 +1,6 @@
 ﻿#nullable disable
 
-using Microsoft.EntityFrameworkCore.Migrations;
-
-namespace IdentityClaimsPlay.Crm.Migrations {
+namespace IdentityClaimsPlay.Data.Migrations {
   /// <inheritdoc />
   public partial class AddedCharity : Migration {
     /// <inheritdoc />

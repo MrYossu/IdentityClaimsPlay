@@ -2,11 +2,9 @@
 
 #nullable disable
 
-using IdentityClaimsPlay.Crm.Data;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
+using IdentityClaimsPlay.Data.Data;
 
-namespace IdentityClaimsPlay.Crm.Migrations
+namespace IdentityClaimsPlay.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20230620134651_AddedCompany")]

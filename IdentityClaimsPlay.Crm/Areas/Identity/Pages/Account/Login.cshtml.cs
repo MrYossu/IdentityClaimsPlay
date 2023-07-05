@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using IdentityClaimsPlay.Crm.Data;
 using IdentityClaimsPlay.Crm.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;

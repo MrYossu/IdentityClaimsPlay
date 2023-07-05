@@ -1,4 +1,4 @@
-﻿namespace IdentityClaimsPlay.Crm.Helpers; 
+﻿namespace IdentityClaimsPlay.Data.Helpers; 
 
 public static class UrlHelper {
   public static string CleanUrl(string url) {

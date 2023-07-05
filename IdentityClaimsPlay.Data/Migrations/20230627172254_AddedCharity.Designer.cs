@@ -2,15 +2,13 @@
 
 #nullable disable
 
-using IdentityClaimsPlay.Crm.Data;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
+using IdentityClaimsPlay.Data.Data;
 
-namespace IdentityClaimsPlay.Crm.Migrations
+namespace IdentityClaimsPlay.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230704173241_AddedDomainToCompany")]
-    partial class AddedDomainToCompany
+    [Migration("20230627172254_AddedCharity")]
+    partial class AddedCharity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,10 +52,6 @@ namespace IdentityClaimsPlay.Crm.Migrations
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Domain")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -303,7 +297,7 @@ namespace IdentityClaimsPlay.Crm.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.HasOne("IdentityClaimsPlay.Data.User", null)
-                        .WithMany("Claims")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -345,11 +339,6 @@ namespace IdentityClaimsPlay.Crm.Migrations
             modelBuilder.Entity("IdentityClaimsPlay.Data.Company", b =>
                 {
                     b.Navigation("Charities");
-                });
-
-            modelBuilder.Entity("IdentityClaimsPlay.Data.User", b =>
-                {
-                    b.Navigation("Claims");
                 });
 #pragma warning restore 612, 618
         }

@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
+    <ProjectReference Include="..\IdentityClaimsPlay.Data\IdentityClaimsPlay.Data.csproj" />
   </ItemGroup>
 
 </Project>
