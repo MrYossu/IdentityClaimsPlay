@@ -1,0 +1,52 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using IdentityClaimsPlay.Admin.Areas.General.Shared
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CRM</title>
+    <base href="~/" />
+    <link rel="icon" href="/images/icon-light.png" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://blazor.cdn.telerik.com/blazor/3.3.0/kendo-theme-bootstrap/all.css" />
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.15.4/css/all.css" />
+    <link rel="stylesheet" href="/css/site.css?ver=ux69bz7q9" />
+    <link rel="stylesheet" href="IdentityClaimsPlay.Crm.Admin.styles.css?ver=ux69bz7q9" />
+  </head>
+  <body class="razor">
+    <div class="page">
+      <div class="sidebar">
+        <component type="typeof(NavMenu)" render-mode="ServerPrerendered" />
+      </div>
+
+      <main>
+        <div class="top-row position-relative">
+          <div class="position-absolute tr-offset"></div>
+          <div class="flex-fill navbar-brand px-md-4" style="z-index: 1;">
+            <a href="/">
+              <div class="logo"></div>
+            </a>
+          </div>
+        </div>
+        <article id="body-content" class="content px-4">
+          @RenderBody()
+        </article>
+
+        <footer>
+
+        </footer>
+      </main>
+    </div>
+
+    <div id="blazor-error-ui">
+      <div class="the-ui col-11 col-md-3 col-sm-5 text-center">
+        Please reload the page to continue.
+        <div><a href="" class="reload"><i class="fad fa-redo-alt me-1"></i>Reload</a></div>
+      </div>
+    </div>
+    @await RenderSectionAsync("Scripts", false)
+  </body>
+</html>

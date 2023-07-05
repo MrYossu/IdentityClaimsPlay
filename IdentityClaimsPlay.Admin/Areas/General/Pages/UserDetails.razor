@@ -21,14 +21,24 @@
                              ValueField="Value"
                              Width="300px" />
       </h3>
-      @if (_model.Role == Roles.CardIssuerUser) {
-        <h3>Permissions</h3>
-        <p>Note that (at the moment at least) it is up to you to make sure you don't give a user permission to edit something that they can't see! It would be nice if we could make it so that granting edit permission automatically granted view permission, and revoking view permission automatically revoked edit permission, but I haven't thought of a way of doing that yet.</p>
-        <ul style="list-style-type: none">
-          @foreach (PermissionDto permission in _model.Permissions) {
-            <li><TelerikCheckBox @bind-Value="@permission.HasPermission" Id="@permission.Value" /> <label for="@permission.Value">@permission.Value</label></li>
-          }
-        </ul>
+      @if (_model.Role != Roles.Admin) {
+        <h3>
+          Company:
+          <TelerikDropDownList Data="@_companies"
+                               @bind-Value="@_model.CompanyId"
+                               TextField="Name"
+                               ValueField="Value"
+                               Width="300px" />
+        </h3>
+        @if (_model.Role == Roles.CardIssuerUser) {
+          <h3>Permissions</h3>
+          <p>Note that (at the moment at least) it is up to you to make sure you don't give a user permission to edit something that they can't see! It would be nice if we could make it so that granting edit permission automatically granted view permission, and revoking view permission automatically revoked edit permission, but I haven't thought of a way of doing that yet.</p>
+          <ul style="list-style-type: none">
+            @foreach (PermissionDto permission in _model.Permissions) {
+              <li><TelerikCheckBox @bind-Value="@permission.HasPermission" Id="@permission.Value" /> <label for="@permission.Value">@permission.Value</label></li>
+            }
+          </ul>
+        }
       }
       <TelerikButton Rounded="@(ThemeConstants.Button.Rounded.Large)"
                      ButtonType="@ButtonType.Submit"

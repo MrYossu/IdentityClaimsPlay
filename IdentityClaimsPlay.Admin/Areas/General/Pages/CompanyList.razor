@@ -1,0 +1,18 @@
+﻿@attribute [Route(RouteHelper.CompanyList)]
+@inherits CommonComponentBase
+
+<PageTitle>Companies</PageTitle>
+
+<h1>Companies</h1>
+
+@if (_companies.Any()) {
+  <p>Click on a company to see details or <a href="/company/new">add a new company</a></p>
+} else {
+  <p>No companies yet. <a href="/company/new">Add a new company</a></p>
+}
+
+<ul>
+  @foreach (Company company in _companies) {
+    <li><a href="/company/@company.Id">@company.Name</a></li>
+  }
+</ul>

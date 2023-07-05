@@ -55,7 +55,6 @@ if (!app.Environment.IsDevelopment()) {
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -69,24 +68,27 @@ app.MapFallbackToAreaPage("/_Host", "General");
 using IServiceScope serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
 UserManager<User> userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<User>>();
 // Global admin, access to all areas, can do anything. Other users can be added when you log in as global admin
-await AddUser("admin@a.com", "1", Roles.Admin);
-
-app.Run();
-
-// Identity methods
-
-async Task AddUser(string email, string password, Roles userRole, params Permissions[] userPermissions) {
-  if (await userManager.FindByEmailAsync(email) != null) {
-    return;
-  }
+string email = "ays@globaladmin.com";
+if (await userManager.FindByEmailAsync(email) == null) {
   User user = new() {
     UserName = email,
     Email = email,
     EmailConfirmed = true
   };
-  await userManager.CreateAsync(user, password);
-  await userManager.AddClaimAsync(user, new Claim(ClaimsHelper.UserRole, userRole.ToString()));
-  foreach (Permissions permission in userPermissions) {
-    await userManager.AddClaimAsync(user, new Claim(ClaimsHelper.UserPermission, permission.ToString()));
+  await userManager.CreateAsync(user, "1");
+  await userManager.AddClaimAsync(user, new Claim(ClaimsHelper.UserRole, Roles.Admin.ToString()));
+  AppDbContext context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
+  user.UserCompanyRoles = new[] {
+    new UserCompanyRole {
+      Role = Roles.Admin.ToString()
+    }
+  };
+  try {
+    context.Users.Update(user);
+    await context.SaveChangesAsync();
+  } catch (Exception ex) {
+    Console.WriteLine($"Ex adding ucr: {ex.Message}");
   }
 }
+
+app.Run();

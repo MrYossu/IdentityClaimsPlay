@@ -8,6 +8,7 @@ public class AppDbContext : IdentityDbContext<User> {
 
   public DbSet<Charity> Charities { get; set; } = null!;
   public DbSet<Company> Companies { get; set; } = null!;
+  public DbSet<UserCompanyRole> UserCompanyRoles { get; set; } = null!;
 
   protected override void OnModelCreating(ModelBuilder modelBuilder) {
     base.OnModelCreating(modelBuilder);

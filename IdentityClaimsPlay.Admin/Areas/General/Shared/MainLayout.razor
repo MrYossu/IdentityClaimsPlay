@@ -1,0 +1,29 @@
+﻿@inherits LayoutComponentBase
+@inject UserHelper UserHelper
+
+<TelerikRootComponent>
+  <PageTitle>Admin</PageTitle>
+
+  <div class="page">
+    <div class="sidebar">
+      <NavMenu />
+    </div>
+
+    <main>
+      <div class="top-row px-4">
+        <CascadingAuthenticationState>
+          @if (UserHelper?.IsAuthed ?? false) {
+            <div>@UserHelper.Email</div>
+            <a href="@RouteHelper.Logout" class="w-auto"><span class="@IconsHelper.LogOut float-start me-2"></span> Log out</a>
+          } else {
+            <a href="@RouteHelper.Login" class="w-auto"><span class="@IconsHelper.LogIn float-start me-2"></span> Log in</a>
+          }
+        </CascadingAuthenticationState>
+      </div>
+
+      <article class="content px-4">
+        @Body
+      </article>
+    </main>
+  </div>
+</TelerikRootComponent>
