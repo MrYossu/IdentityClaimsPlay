@@ -10,13 +10,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{0446FC60-1
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityClaimsPlay.Data", "IdentityClaimsPlay.Data\IdentityClaimsPlay.Data.csproj", "{92EEBDF1-80A6-45E3-BCCE-D0BBCA6C05E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityClaimsPlay.Data", "IdentityClaimsPlay.Data\IdentityClaimsPlay.Data.csproj", "{92EEBDF1-80A6-45E3-BCCE-D0BBCA6C05E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityClaimsPlayAdmin", "IdentityClaimsPlayAdmin\IdentityClaimsPlayAdmin.csproj", "{1EDC6CD7-2238-4DF7-9C4D-FC852EDA5222}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityClaimsPlay.Admin", "IdentityClaimsPlay.Admin\IdentityClaimsPlay.Admin.csproj", "{1EDC6CD7-2238-4DF7-9C4D-FC852EDA5222}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityClaimsPlay.Portal", "IdentityClaimsPlay.Portal\IdentityClaimsPlay.Portal.csproj", "{CAE05F1B-3843-467F-A67B-1D7742D2A8E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityClaimsPlay.Portal", "IdentityClaimsPlay.Portal\IdentityClaimsPlay.Portal.csproj", "{CAE05F1B-3843-467F-A67B-1D7742D2A8E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityClaimsPlay.Accountants", "IdentityClaimsPlay.Accountants\IdentityClaimsPlay.Accountants.csproj", "{5A7B9C93-ADB7-4191-BFCA-4F78B5158EA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityClaimsPlay.Accountants", "IdentityClaimsPlay.Accountants\IdentityClaimsPlay.Accountants.csproj", "{5A7B9C93-ADB7-4191-BFCA-4F78B5158EA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

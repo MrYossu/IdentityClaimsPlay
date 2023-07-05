@@ -5,11 +5,11 @@
 Part of a project I'm starting requires us to allow the users to set permissions to control what other users can do on the site. I had previously used roles for this, but it was getting a bit cumbersome, and Microsoft seem to recommend going with claims anyway, so I decided to have a play around with this and see if I could get it all working.
 
 ### Solution overview
-The project is a set of web sites that will be used by many companies. Each company will have the following portals:
+The project is a set of web sites that will be used by many companies. Each company will have the following portals. The numbers shown in brackets are the ports used, so you can load each portal individually (see the notes lower down about how to simulate different companies):
 - A global admin portal to be used by the company that runs the whole operation. Global admin suers would be able to add, edit and delete the individual companies who will use the other portals
-- A CRM, where they can see and modify their own company data and their customers' data
+- A CRM (5153), where they can see and modify their own company data and their customers' data
 - A customer portal, where customers can log in and see thier data
-- An accountant portal, where their accountant can log in and generate reports
+- An accountant portal (5007), where their accountant can log in and generate reports
 
 In addition, there will be a global admin portal, where the global company running this whole operation can manage the individual companies.
 
@@ -34,11 +34,13 @@ I'm approaching this by setting up claims:
 The code will add a user with email `admin@a.com` who is a global admin user. Once logged in with that email (password is `1`), that user can add other users.
 
 ### Things to do
-- Add a global admin site 
-- Make it clear that the web site in the project now is the CRM
-- Add a customers (donors) list and details page to the CRM
-- Add a customer portal
-- Add an accountant portal
+- Make the relationship between users and companies many-to-many, and have the joining table include a role, so we can check if a user is in the required role for a specific site
+- All pages on all portals should require auth
+- Add global admin functionality to the admin project
+- Rebrand the CRM project with the company colours
+- Remove non-CRM fucntionality from the CRM project (eg the global admin functionality)
+- Add some functionality to the customer portal, including branding
+- Add the appropriate functionality to the accountant portal
 
 ### Notes for anyone intending to clone this repo
 I use the rather excellent [Telerik UI for Blazor](https://www.telerik.com/blazor-ui) components(*), which are referenced in this sample project. If you don't have a licence for this, you can either get a free trial, or just modify the pages that use Telerik controls to use regular Blazor controls. As I intend to lift large parts of this code into the real application, I started off using Telerik in the sample.
