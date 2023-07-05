@@ -2,12 +2,6 @@
 
 [AuthoriseByPermission(Permissions.CanViewCharities)]
 public partial class CharityList {
-  [Inject]
-  public AppDbContext Context { get; set; } = null!;
-
-  [Inject]
-  public UserHelper UserHelper { get; set; } = null!;
-
   private string _companyId = "";
   private List<Charity> _charities = new();
 

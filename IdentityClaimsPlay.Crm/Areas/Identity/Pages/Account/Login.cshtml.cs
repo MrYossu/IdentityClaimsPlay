@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using IdentityClaimsPlay.Data.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
@@ -9,12 +10,14 @@ namespace IdentityClaimsPlay.Crm.Areas.Identity.Pages.Account;
 public class LoginModel : PageModel {
   private readonly SignInManager<User> _signInManager;
   private readonly AppDbContext _appDbContext;
-  private readonly ILogger<LoginModel> _logger;
+  private readonly CompanyInfoHelper _companyInfoHelper;
+  private readonly IHttpContextAccessor _httpContextAccessor;
 
-  public LoginModel(SignInManager<User> signInManager, AppDbContext appDbContext, ILogger<LoginModel> logger) {
+  public LoginModel(SignInManager<User> signInManager, AppDbContext appDbContext, CompanyInfoHelper companyInfoHelper, IHttpContextAccessor httpContextAccessor) {
     _signInManager = signInManager;
     _appDbContext = appDbContext;
-    _logger = logger;
+    _companyInfoHelper = companyInfoHelper;
+    _httpContextAccessor = httpContextAccessor;
   }
 
   public List<User> Users { get; set; } = new();
@@ -39,30 +42,37 @@ public class LoginModel : PageModel {
     if (!string.IsNullOrEmpty(ErrorMessage)) {
       ModelState.AddModelError(string.Empty, ErrorMessage);
     }
-    Users = await _appDbContext.Users.Include(u => u.Company).OrderBy(u => u.Company.Name).ThenBy(u => u.Email).ToListAsync();
+    await SetUsers();
   }
+
+  private async Task SetUsers() =>
+    // TODO AYS - Would be helpful to include the user's company and roles, so we can test easily
+    Users = await _appDbContext.Users.OrderBy(u => u.Email).ToListAsync();
 
   public async Task<IActionResult> OnPostAsync() {
     if (ModelState.IsValid) {
-      User? user = await _appDbContext.Users.Include(u => u.Company).SingleOrDefaultAsync(u => u.Email == Input.Email);
+      CompanyInfo companyInfo = await _companyInfoHelper.GetCompanyInfo(_httpContextAccessor.HttpContext?.Request.Host.ToString() ?? "Jim"); // Jim added just in case someone managed to sneak a company into the database without specifying the domain
+      User? user = await _appDbContext.Users.SingleOrDefaultAsync(u => u.Email == Input.Email && u.UserCompanyRoles.Any(c => c.CompanyId == companyInfo.Id && (c.Role == Roles.CardIssuerAdmin.ToString() || c.Role == Roles.CardIssuerUser.ToString())));
       if (user == null) {
         ModelState.AddModelError(string.Empty, "Invalid login attempt");
+        await SetUsers();
         return Page();
       }
       SignInResult credsCorrect = await _signInManager.CheckPasswordSignInAsync(user, Input.Password, false);
       if (credsCorrect.Succeeded) {
-        Claim[] customClaims = { new(ClaimsHelper.CompanyId, user.CompanyId ?? ""), new(ClaimsHelper.CompanyName, user.Company?.Name ?? "") };
+        Claim[] customClaims = { new(ClaimsHelper.CompanyId, companyInfo.Id), new(ClaimsHelper.CompanyName, companyInfo.Name) };
         await _signInManager.SignInWithClaimsAsync(user, true, customClaims);
         return LocalRedirect("/");
       }
       if (credsCorrect.IsLockedOut) {
-        _logger.LogWarning("User account locked out.");
         return RedirectToPage("./Lockout");
       }
       ModelState.AddModelError(string.Empty, "Invalid login attempt");
+      await SetUsers();
       return Page();
     }
     // If we got this far, something failed, redisplay form
+    await SetUsers();
     return Page();
   }
 }

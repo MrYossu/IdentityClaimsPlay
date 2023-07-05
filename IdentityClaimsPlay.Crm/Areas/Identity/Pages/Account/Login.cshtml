@@ -12,7 +12,7 @@
     <div class="form-floating mb-3">
       <select asp-for="Input.Email" class="form-control" id="floatingInput">
         @foreach (User user in Model.Users) {
-          <option value="@user.Email">@user.Email (@(String.IsNullOrWhiteSpace(user.Company?.Name) ? "Admin" : user.Company?.Name))</option>
+          <option value="@user.Email">@user.Email</option>
         }
       </select>
       <label for="floatingInput">Email address</label>

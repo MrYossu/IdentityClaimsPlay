@@ -6,9 +6,6 @@ public partial class CompanyDetails {
   public string Id { get; set; } = "";
 
   [Inject]
-  public AppDbContext Context { get; set; } = null!;
-
-  [Inject]
   public NavigationManager NavigationManager { get; set; } = null!;
 
   private bool _loaded;

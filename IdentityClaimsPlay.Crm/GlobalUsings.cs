@@ -9,3 +9,4 @@ global using IdentityClaimsPlay.Asp.Components;
 global using IdentityClaimsPlay.Asp.Helpers;
 global using IdentityClaimsPlay.Data.Data;
 global using IdentityClaimsPlay.Data.Helpers;
+global using IdentityClaimsPlay.Crm.Areas.General.Shared;

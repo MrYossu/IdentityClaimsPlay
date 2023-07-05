@@ -1,4 +1,5 @@
 ﻿@attribute [Route(RouteHelper.UserList)]
+@inherits CommonComponentBase
 
 <PageTitle>Users</PageTitle>
 
@@ -10,7 +11,6 @@
   <thead>
     <tr>
       <th>Email</th>
-      <th>Company</th>
       <th>Role</th>
       <th>Permissions(s)</th>
     </tr>
@@ -19,7 +19,6 @@
     @foreach (User user in _users) {
       <tr>
         <td><a href="@(RouteHelper.UserDetails + user.Id)">@user.Email</a></td>
-        <td>@(user.Company is not null ? user.Company.Name : "Global admin")</td>
         <td>@user.Claims.Single(c => c.ClaimType == ClaimsHelper.UserRole).ClaimValue.SplitCamelCase()</td>
         <td>@user.Claims.Where(c => c.ClaimType != ClaimsHelper.UserRole).Select(c => c.ClaimValue.SplitCamelCase()).JoinStr()</td>
       </tr>

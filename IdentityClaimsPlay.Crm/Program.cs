@@ -41,7 +41,9 @@ builder.Services.AddAuthorization(options => {
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddTransient<CompanyInfoHelper>();
 builder.Services.AddTransient<UserHelper>();
 
 WebApplication app = builder.Build();

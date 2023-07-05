@@ -11,9 +11,6 @@ public partial class CharityDetails {
   [Inject]
   public NavigationManager NavigationManager { get; set; } = null!;
 
-  [Inject]
-  public UserHelper UserHelper { get; set; } = null!;
-
   private bool _loaded;
   private Company _company = null!;
   private Charity? _charity;
@@ -24,11 +21,10 @@ public partial class CharityDetails {
     User me = await Context.Users.SingleAsync(u => u.Email == email);
     List<string> myPermissions = UserHelper.Permissions.Select(c => c.Value).ToList();
     _canEdit = myPermissions.Any(p => p == Permissions.CanEditCharities.ToString());
-    _company = await Context.Companies.SingleAsync(c => c.Id == me.CompanyId);
+    _company = await Context.Companies.SingleAsync(c => c.Id == CompanyInfo.Id);
   }
 
   protected override async Task OnParametersSetAsync() {
-    // TODO AYS - Need to set the company. What do we do if the user is admin, and so not associated with a company?
     _charity = Id == "new" ? new() { Company = _company } : await Context.Charities.FirstOrDefaultAsync(c => c.Id == Id);
     _loaded = true;
   }
