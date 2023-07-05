@@ -1,0 +1,30 @@
+﻿@using IdentityClaimsPlay.Crm.Data
+@using IdentityClaimsPlay.Crm.Helpers
+@attribute [Route(RouteHelper.UserList)]
+
+<PageTitle>Users</PageTitle>
+
+<h1>Users@(string.IsNullOrWhiteSpace(UserHelper.CompanyName) ? "" : $" for {UserHelper.CompanyName}")</h1>
+
+<p>Click on a user to see details or <a href="@(RouteHelper.UserDetails)new">add a new user</a></p>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>Company</th>
+      <th>Role</th>
+      <th>Permissions(s)</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (User user in _users) {
+      <tr>
+        <td><a href="@(RouteHelper.UserDetails + user.Id)">@user.Email</a></td>
+        <td>@(user.Company is not null ? user.Company.Name : "Global admin")</td>
+        <td>@user.Claims.Single(c => c.ClaimType == ClaimsHelper.UserRole).ClaimValue.SplitCamelCase()</td>
+        <td>@user.Claims.Where(c => c.ClaimType != ClaimsHelper.UserRole).Select(c => c.ClaimValue.SplitCamelCase()).JoinStr()</td>
+      </tr>
+    }
+  </tbody>
+</table>

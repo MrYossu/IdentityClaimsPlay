@@ -1,0 +1,28 @@
+﻿@using IdentityClaimsPlay.Crm.Helpers
+@attribute [Route(RouteHelper.CharityDetailsId)]
+
+<PageTitle>Charity details</PageTitle>
+
+@if (_loaded) {
+  if (_charity is not null) {
+    <h1>Charity details for Id: @_charity.Name</h1>
+    <EditForm Model="@_charity">
+      <h3>Name: <TelerikTextBox @bind-Value="@_charity.Name" Class="w-25" Enabled="_canEdit" /></h3>
+      <h3>Number: <TelerikTextBox @bind-Value="@_charity.Number" Class="w-25" Enabled="_canEdit" /></h3>
+      @if (_canEdit) {
+        <TelerikButton Rounded="@(ThemeConstants.Button.Rounded.Large)"
+                       ButtonType="@ButtonType.Submit"
+                       ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)"
+                       OnClick="Save">
+          <span class="@IconsHelper.Save me-1"></span> Save
+        </TelerikButton>
+        <p>Note that for simplicity, this sample doesn't do any validation</p>
+      }
+    </EditForm>
+  } else {
+    <h1>Charity not found</h1>
+    <p>Big flop, can't find that charity</p>
+  }
+} else {
+  <h1>Loading...</h1>
+}

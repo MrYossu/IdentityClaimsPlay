@@ -1,0 +1,23 @@
+﻿@using IdentityClaimsPlay.Crm.Helpers
+@attribute [Route(RouteHelper.CompanyDetails)]
+
+<PageTitle>Company details</PageTitle>
+
+@if (_loaded) {
+  if (_company is not null) {
+    <h1>Company details for Id: @_company.Id</h1>
+    <EditForm Model="@_company">
+      <h3>Name: <TelerikTextBox @bind-Value="@_company.Name" Class="w-25" /></h3>
+      <h3>Domain: <TelerikTextBox @bind-Value="@_company.Domain" Class="w-25" /></h3>
+      <TelerikButton Rounded="@(ThemeConstants.Button.Rounded.Large)"
+                     ButtonType="@ButtonType.Submit"
+                     ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)"
+                     OnClick="Save"><span class="@IconsHelper.Save me-1"></span> Save</TelerikButton>
+    </EditForm>
+  } else {
+    <h1>Company not found</h1>
+    <p>Big flop, can't find that company</p>
+  }
+} else {
+  <h1>Loading...</h1>
+}

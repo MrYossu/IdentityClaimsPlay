@@ -1,0 +1,58 @@
+﻿@using IdentityClaimsPlay.Crm.Helpers
+@attribute [Route(RouteHelper.Home)]
+
+<PageTitle>Identity Claims Play</PageTitle>
+
+<h1>Identity Claims Play</h1>
+<p>See <a href="https://github.com/MrYossu/IdentityClaimsPlay" target="_blank">the project page</a> for more details of what's going on here</p>
+<p>Note that for simplicity, none of the forms in this sample do any validation</p>
+
+<p>Domain: @CompanyInfo.Name</p>
+
+<h2>Your details</h2>
+@if (UserHelper.IsAuthed) {
+  <p>
+    You are logged in as <code>@UserHelper.Email</code>, and have the role <code>@UserHelper.RoleStr</code>
+    @if (!UserHelper.GlobalAdmin) {
+      <span> and are associated with @UserHelper.CompanyName</span>
+    }
+    </p>
+  @if (UserHelper.Role == Roles.CardIssuerUser) {
+    <p>You have the following permission(s)...</p>
+    <ul>
+      @foreach (Claim claim in UserHelper.Permissions) {
+        <li>@claim.Value.SplitCamelCase()</li>
+      }
+    </ul>
+  }
+} else {
+  <p>You are not logged in. Go to the <a href="@RouteHelper.Login">log-in page</a> and pick a user.</p>
+}
+
+<h2>Access restrictions</h2>
+<p>These are the intentions, not all permissions (and indeed not all pages) may be implemented yet.</p>
+<dl>
+  <dt>Home page</dt>
+  <dd>Anyone can access</dd>
+  <dt>Company list</dt>
+  <dd>Only global admin can access</dd>
+  <dt>User list and details</dt>
+  <dd>Only global and company admins can access. Company admins can only see users for their company</dd>
+  <dt>Charity list and details</dt>
+  <dd>All admins, and flunkies with charity permissions can view. Only flunkies with edit charity permissions can edit</dd>
+  <dt>TODO - Donor list and details</dt>
+  <dd>All admins, and flunkies with donor permissions can view. Only flunkies with edit donor permissions can edit</dd>
+</dl>
+
+<h2>Things to do</h2>
+<ul>
+  <li><strong>Important:</strong> We need to allow users to be in multiple roles. For example, an accountant may be associated with multiple companies, as well as being a customer of one of them. When logging in, pick up the company from the URL and set the claims at log-in. We can distinguish between an accountant, a company employee and a customer by the portal URL.</li>
+  <li>We also need to handle donors logging in, so will need an extra role</li>
+</ul>
+
+<style>
+  h2 {
+    border-top: 1px solid rgb(4, 4, 128);
+    padding-top: 3px;
+  }
+</style>

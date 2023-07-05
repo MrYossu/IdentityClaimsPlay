@@ -1,0 +1,47 @@
+﻿@using IdentityClaimsPlay.Crm.Helpers
+<CascadingAuthenticationState>
+  <div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="">Identity Claims Play</a>
+      <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+      <div class="nav-item px-3">
+        <NavLink class="nav-link" href="@RouteHelper.Home" Match="NavLinkMatch.All">
+          <span class="@IconsHelper.House me-2" aria-hidden="true"></span> Home
+        </NavLink>
+
+        <AuthorizeViewRole Role="@Roles.Admin">
+          <NavLink class="nav-link" href="@RouteHelper.CompanyList" Match="NavLinkMatch.All">
+            <span class="@IconsHelper.Building me-2" aria-hidden="true"></span> Companies
+          </NavLink>
+        </AuthorizeViewRole>
+
+        <AuthorizeViewRole Role="@Roles.CardIssuerAdmin">
+          <NavLink class="nav-link" href="@RouteHelper.UserList" Match="NavLinkMatch.All">
+            <span class="@IconsHelper.Users me-2" aria-hidden="true"></span> Users
+          </NavLink>
+        </AuthorizeViewRole>
+
+        <AuthorizeViewPermission Permission="@Permissions.CanViewCharities">
+        <NavLink class="nav-link" href="@RouteHelper.CharityList" Match="NavLinkMatch.All">
+          <span class="@IconsHelper.HandHoldingHeart me-2" aria-hidden="true"></span> Charities
+        </NavLink>
+        </AuthorizeViewPermission>
+      </div>
+    </nav>
+  </div>
+</CascadingAuthenticationState>
+
+@code {
+  private bool collapseNavMenu = true;
+
+  private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+  private void ToggleNavMenu() => collapseNavMenu = !collapseNavMenu;
+}
