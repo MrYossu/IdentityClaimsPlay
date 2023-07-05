@@ -5,10 +5,10 @@
 Part of a project I'm starting requires us to allow the users to set permissions to control what other users can do on the site. I had previously used roles for this, but it was getting a bit cumbersome, and Microsoft seem to recommend going with claims anyway, so I decided to have a play around with this and see if I could get it all working.
 
 ### Solution overview
-The project is a set of web sites that will be used by many companies. Each company will have the following portals. The numbers shown in brackets are the ports used, so you can load each portal individually (see the notes lower down about how to simulate different companies):
-- A global admin portal to be used by the company that runs the whole operation. Global admin suers would be able to add, edit and delete the individual companies who will use the other portals
+The project is a set of web sites that will be used by many companies. Each company will have the following portals. The numbers shown in brackets are the ports used (at least when I run them, [YMMV](https://www.collinsdictionary.com/dictionary/english/ymmv)), so you can load each portal individually (see the notes lower down about how to simulate different companies):
+- A global admin portal (5294) to be used by the company that runs the whole operation. Global admin suers would be able to add, edit and delete the individual companies who will use the other portals
 - A CRM (5153), where they can see and modify their own company data and their customers' data
-- A customer portal, where customers can log in and see thier data
+- A customer portal (5179), where customers can log in and see thier data
 - An accountant portal (5007), where their accountant can log in and generate reports
 
 In addition, there will be a global admin portal, where the global company running this whole operation can manage the individual companies.
