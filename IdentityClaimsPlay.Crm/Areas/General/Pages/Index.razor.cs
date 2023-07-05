@@ -1,6 +1,4 @@
-﻿using IdentityClaimsPlay.Crm.Helpers;
-
-namespace IdentityClaimsPlay.Crm.Areas.General.Pages;
+﻿namespace IdentityClaimsPlay.Crm.Areas.General.Pages;
 
 public partial class Index {
   [CascadingParameter]
@@ -8,5 +6,4 @@ public partial class Index {
 
   [Inject]
   public UserHelper UserHelper { get; set; } = null!;
-
 }

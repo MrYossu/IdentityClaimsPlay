@@ -1,4 +1,4 @@
-﻿namespace IdentityClaimsPlay.Crm.Helpers;
+﻿namespace IdentityClaimsPlay.Asp.Helpers;
 
 public class RouteHelper {
   public const string Home = @"/";

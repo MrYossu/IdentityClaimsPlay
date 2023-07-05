@@ -1,5 +1,4 @@
-﻿@using IdentityClaimsPlay.Crm.Helpers
-@attribute [Route(RouteHelper.UserDetailsId)]
+﻿@attribute [Route(RouteHelper.UserDetailsId)]
 
 @if (_loaded) {
   if (Id == "new" || !string.IsNullOrWhiteSpace(_model.Email)) {
@@ -9,7 +8,7 @@
       <h1>User details for: @_model.Email</h1>
     }
 
-    <p>Roles: @_roles.Select(r=>r.Name).JoinStr()</p>
+    <p>Roles: @_roles.Select(r => r.Name).JoinStr()</p>
 
     <EditForm Model="@_model">
       @if (Id == "new") {

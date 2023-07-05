@@ -1,6 +1,4 @@
-﻿using IdentityClaimsPlay.Crm.Helpers;
-
-namespace IdentityClaimsPlay.Crm.Areas.General.Pages;
+﻿namespace IdentityClaimsPlay.Crm.Areas.General.Pages;
 
 [AuthoriseByRole(Roles.Admin)]
 public partial class CompanyDetails {

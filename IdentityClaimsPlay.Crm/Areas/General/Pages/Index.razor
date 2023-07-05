@@ -1,5 +1,4 @@
-﻿@using IdentityClaimsPlay.Crm.Helpers
-@attribute [Route(RouteHelper.Home)]
+﻿@attribute [Route(RouteHelper.Home)]
 
 <PageTitle>CRM</PageTitle>
 
@@ -16,7 +15,7 @@
     @if (!UserHelper.GlobalAdmin) {
       <span> and are associated with @UserHelper.CompanyName</span>
     }
-    </p>
+  </p>
   @if (UserHelper.Role == Roles.CardIssuerUser) {
     <p>You have the following permission(s)...</p>
     <ul>

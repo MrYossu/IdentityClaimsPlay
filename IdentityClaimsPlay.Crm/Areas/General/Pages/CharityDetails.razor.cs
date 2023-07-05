@@ -1,6 +1,4 @@
-﻿using IdentityClaimsPlay.Crm.Helpers;
-
-namespace IdentityClaimsPlay.Crm.Areas.General.Pages;
+﻿namespace IdentityClaimsPlay.Crm.Areas.General.Pages;
 
 [AuthoriseByPermission(Permissions.CanViewCharities)]
 public partial class CharityDetails {
@@ -24,7 +22,7 @@ public partial class CharityDetails {
   protected override async Task OnInitializedAsync() {
     string email = UserHelper.Email;
     User me = await Context.Users.SingleAsync(u => u.Email == email);
-    List<string> myPermissions = UserHelper.Permissions.Select(c=>c.Value).ToList();
+    List<string> myPermissions = UserHelper.Permissions.Select(c => c.Value).ToList();
     _canEdit = myPermissions.Any(p => p == Permissions.CanEditCharities.ToString());
     _company = await Context.Companies.SingleAsync(c => c.Id == me.CompanyId);
   }

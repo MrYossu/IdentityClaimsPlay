@@ -1,5 +1,4 @@
-﻿@using IdentityClaimsPlay.Crm.Helpers
-@attribute [Route(RouteHelper.CompanyDetails)]
+﻿@attribute [Route(RouteHelper.CompanyDetails)]
 
 <PageTitle>Company details</PageTitle>
 
@@ -13,7 +12,9 @@
       <TelerikButton Rounded="@(ThemeConstants.Button.Rounded.Large)"
                      ButtonType="@ButtonType.Submit"
                      ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)"
-                     OnClick="Save"><span class="@IconsHelper.Save me-1"></span> Save</TelerikButton>
+                     OnClick="Save">
+        <span class="@IconsHelper.Save me-1"></span> Save
+      </TelerikButton>
     </EditForm>
   } else {
     <h1>Company not found</h1>

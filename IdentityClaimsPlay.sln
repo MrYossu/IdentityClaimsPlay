@@ -18,6 +18,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityClaimsPlay.Portal",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityClaimsPlay.Accountants", "IdentityClaimsPlay.Accountants\IdentityClaimsPlay.Accountants.csproj", "{5A7B9C93-ADB7-4191-BFCA-4F78B5158EA4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityClaimsPlay.Asp", "IdentityClaimsPlay.Asp\IdentityClaimsPlay.Asp.csproj", "{0BB0A85C-A72C-49C3-9893-6F68D072B7E4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{5A7B9C93-ADB7-4191-BFCA-4F78B5158EA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A7B9C93-ADB7-4191-BFCA-4F78B5158EA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A7B9C93-ADB7-4191-BFCA-4F78B5158EA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BB0A85C-A72C-49C3-9893-6F68D072B7E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BB0A85C-A72C-49C3-9893-6F68D072B7E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BB0A85C-A72C-49C3-9893-6F68D072B7E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BB0A85C-A72C-49C3-9893-6F68D072B7E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

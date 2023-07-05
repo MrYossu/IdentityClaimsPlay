@@ -1,4 +1,4 @@
-﻿namespace IdentityClaimsPlay.Data.Helpers;
+﻿namespace IdentityClaimsPlay.Asp.Helpers;
 
 public class IconsHelper {
   public static string Address = "fa fa-address-card";
