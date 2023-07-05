@@ -1,5 +1,3 @@
-using IdentityClaimsPlay.Asp.Helpers;
-
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContextFactory<AppDbContext>(options => {

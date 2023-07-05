@@ -1,6 +1,4 @@
 ﻿using System.Security.Claims;
-using IdentityClaimsPlay.Data.Data;
-using Microsoft.AspNetCore.Components.Authorization;
 
 namespace IdentityClaimsPlay.Asp.Helpers;
 
