@@ -5,11 +5,11 @@
 Part of a project I'm starting requires us to allow the users to set permissions to control what other users can do on the site. I had previously used roles for this, but it was getting a bit cumbersome, and Microsoft seem to recommend going with claims anyway, so I decided to have a play around with this and see if I could get it all working.
 
 ### Solution overview
-The project is a set of web sites that will be used by many companies. Each company will have the following portals. The numbers shown in brackets are the ports used (at least when I run them, [YMMV](https://www.collinsdictionary.com/dictionary/english/ymmv)), so you can load each portal individually (see the notes lower down about how to simulate different companies):
-- A global admin portal (5294) to be used by the company that runs the whole operation. Global admin suers would be able to add, edit and delete the individual companies who will use the other portals
-- A CRM (5153), where they can see and modify their own company data and their customers' data
-- A customer portal (5179), where customers can log in and see thier data
-- An accountant portal (5007), where their accountant can log in and generate reports
+The project is a set of web sites that will be used by many companies. Each company will have the following portals (see the notes lower down about how to simulate different companies):
+- A global admin portal to be used by the company that runs the whole operation. Global admin suers would be able to add, edit and delete the individual companies who will use the other portals
+- A CRM, where they can see and modify their own company data and their customers' data
+- A customer portal, where customers can log in and see thier data
+- An accountant portal, where their accountant can log in and generate reports
 
 In addition, there will be a global admin portal, where the global company running this whole operation can manage the individual companies.
 
@@ -17,7 +17,9 @@ The fun bit is that an individual user may need multiple roles. For example, an 
 
 I am making the assumption that only company users will log in to the CRM, only customers will log in to the customer portal, and only accountants will log in to the accountants portal. This means that the log-in page of each portal can look for a user with the email supplied, and a known role, based on the individual portal.
 
-I will also need to account for the fact that the same code base will serve all companies, so I will need to know which company is relevant when logging in
+I will also need to account for the fact that the same code base will serve all companies, so I will need to know which company is relevant when logging in. This will be picked up from the domain name.
+
+**Note:** That for reasons not worth droning on about here, companies are also referred to as card issuers, and customers are also referred to as donors. I used "customers" and "companies" in this document, as these are more familiar to most people, but used "card issuers" and "donors" in various places in the code as these more accurately reflect the real scenario.
 
 ### User types
 Following on from this, we need the following user types...
@@ -34,25 +36,28 @@ I'm approaching this by setting up claims:
 The code will add a user with email `admin@a.com` who is a global admin user. Once logged in with that email (password is `1`), that user can add other users.
 
 ### Things to do
-- Make the relationship between users and companies many-to-many, and have the joining table include a role, so we can check if a user is in the required role for a specific site
-- All pages on all portals should require auth
-- Add global admin functionality to the admin project
-- Rebrand the CRM project with the company colours
-- Remove non-CRM fucntionality from the CRM project (eg the global admin functionality)
-- Add some functionality to the customer portal, including branding
-- Add the appropriate functionality to the accountant portal
+- General
+  - All pages on all portals should require auth
+- Admin portal (done)
+- CRM portal
+  - Rebrand with the company colours
+  - Remove non-CRM fucntionality (eg the global admin functionality)
+- Customer (donor) portal
+  - Add some functionality, including branding
+- Accountant portal
+  - Add the appropriate functionality
 
 ### Notes for anyone intending to clone this repo
 I use the rather excellent [Telerik UI for Blazor](https://www.telerik.com/blazor-ui) components(*), which are referenced in this sample project. If you don't have a licence for this, you can either get a free trial, or just modify the pages that use Telerik controls to use regular Blazor controls. As I intend to lift large parts of this code into the real application, I started off using Telerik in the sample.
 
 As this is a sample, all users will have the stupendously secure password of `1`. If you copy any of this code into a real app, don't forget to tighten up the password rules in `Program.cs`! Specifically, set `options.Password.RequiredLength` to a [sensible length](https://blog.codinghorror.com/password-rules-are-bullshit/). Actually, I changed it so that logging in doesn't even require you to enter a password. This was done for ease of switching users, so don't try it on a production site!
 
-When you first run the global admin site (not yet added, but you can do this from the CRM portal), you'll need to add at least one company, and set the `Domain` property to something like `companya:5153`, where `companya` is the fake company domain you'll add to your `hosts` file (see below) and `5153` is the port that the site runs on when you debug in Visual Studio.
+When you first run the global admin site, you'll need to add at least one company, and set the `Domain` property to something like `companya`, where `companya` is the fake company domain you'll add to your `hosts` file (see below).
 
 In order to play wih this properly, you need to simulate multiple sites. The easiest way to do this is to add some lines to your `hosts` file, which you can find in `C:\Windows\System32\drivers\etc`. You'll need to run Notepad as administrator to be able to edit this file.For each company that you want to simulate, add a line like...
 
 `127.0.0.1 companya`
 
-...to the file. Then when the app runs, change `localhost` to `companya` (or whatever you named it), leaving the port number intact. This should run the web site for that company. You should be able to navigate to `http://companya:5153` in your web browser (using the domain name and port you specified earlier). Note that I coudln't get this to work with HTTPS, but as it's only for development, that doesn't matter.
+...to the file. Then when the each portal runs, change `localhost` to `companya` (or whatever you named it), leaving the port number intact. This should run the appropriate portal for that company. You should be able to navigate to `http://companya:5153` in your web browser (using the domain name and port you specified earlier).
 
 (*) No, I don't work for Telerik, nor do I have any affiliation with them. I'm just a satisifed customer!

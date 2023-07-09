@@ -13,7 +13,7 @@ public class CompanyInfoHelper {
 
   public async Task<CompanyInfo> GetCompanyInfo(string uri) {
     string domain = uri.Replace("https://", "").Replace("/", "");
-    Company? company = await (await _contextFactory.CreateDbContextAsync()).Companies.SingleOrDefaultAsync(c => c.Domain == domain);
+    Company? company = await (await _contextFactory.CreateDbContextAsync()).Companies.SingleOrDefaultAsync(c => domain.Contains(c.Domain));
     if (company is not null) {
       return new(company.Id, company.Name, company.Domain);
     }
