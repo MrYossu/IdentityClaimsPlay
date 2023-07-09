@@ -4,7 +4,8 @@ public enum Roles {
   Admin,
   CardIssuerAdmin,
   CardIssuerUser,
-  Accountant
+  Accountant,
+  Donor
 }
 
 public enum Permissions {

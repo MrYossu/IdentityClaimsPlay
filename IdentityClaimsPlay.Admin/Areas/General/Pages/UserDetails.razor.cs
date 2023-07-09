@@ -52,7 +52,8 @@ public partial class UserDetails {
             CompanyId = c.Value,
             CompanyName = c.Name,
             Role = _user.UserCompanyRoles.Any(r => ClaimsHelper.IsCompanyRole(r.Role)) ? ClaimsHelper.StringToRole(_user.UserCompanyRoles.Single(r => ClaimsHelper.IsCompanyRole(r.Role)).Role) : Roles.CardIssuerAdmin,
-            Accountant = _user.UserCompanyRoles.Any(r => r.CompanyId == c.Value && r.Role == Roles.Accountant.ToString()),
+            IsAccountant = _user.UserCompanyRoles.Any(r => r.CompanyId == c.Value && r.Role == Roles.Accountant.ToString()),
+            IsDonor = _user.UserCompanyRoles.Any(r => r.CompanyId == c.Value && r.Role == Roles.Donor.ToString()),
             Permissions = ClaimsHelper.AllPermissions.Select(p => new PermissionDto(p, _user.UserCompanyRoles.Any(r => r.CompanyId == c.Value && r.Role == p))).ToList()
           };
         }).ToList();
@@ -110,8 +111,15 @@ public partial class UserDetails {
           }
         }
       }
+      // Is he a donor?
+      if (uc.IsDonor) {
+        roles.Add(new UserCompanyRole {
+          CompanyId = uc.CompanyId,
+          Role = Roles.Donor.ToString()
+        });
+      }
       // Is he a company accountant?
-      if (uc.Accountant) {
+      if (uc.IsAccountant) {
         roles.Add(new UserCompanyRole {
           CompanyId = uc.CompanyId,
           Role = Roles.Accountant.ToString()
@@ -131,10 +139,11 @@ public partial class UserDetails {
 
   public class UserCompanyModel {
     public bool IsUser { get; set; }
+    public bool IsDonor { get; set; }
     public string? CompanyId { get; set; }
     public string CompanyName { get; set; } = "";
     public Roles Role { get; set; } = Roles.CardIssuerAdmin;
-    public bool Accountant { get; set; }
+    public bool IsAccountant { get; set; }
     public List<PermissionDto> Permissions = new();
   }
 

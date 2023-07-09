@@ -22,6 +22,7 @@
             <td>Role</td>
             <td>Permissions</td>
             <td>Accountant</td>
+            <td>Donor</td>
           </tr>
         </thead>
         <tbody>
@@ -54,7 +55,8 @@
                   </ul>
                 }
               </td>
-              <td><TelerikCheckBox @bind-Value="@company.Accountant" /></td>
+              <td><TelerikCheckBox @bind-Value="@company.IsAccountant" /></td>
+              <td><TelerikCheckBox @bind-Value="@company.IsDonor" /></td>
             </tr>
           }
         </tbody>

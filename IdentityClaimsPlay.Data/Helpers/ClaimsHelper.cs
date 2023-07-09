@@ -10,7 +10,7 @@ public static class ClaimsHelper {
     Enum.GetValues(typeof(Roles)).Cast<Roles>().ToList();
 
   public static List<Roles> AllCompanyRoles =>
-    Enum.GetValues(typeof(Roles)).Cast<Roles>().Where(r => r != Roles.Admin && r != Roles.Accountant).ToList();
+    Enum.GetValues(typeof(Roles)).Cast<Roles>().Where(r => r is Roles.CardIssuerAdmin or Roles.CardIssuerUser).ToList();
 
   public static bool IsCompanyRole(Roles role) =>
     AllCompanyRoles.Contains(role);
