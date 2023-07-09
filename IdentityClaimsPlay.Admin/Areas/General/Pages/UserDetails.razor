@@ -13,39 +13,67 @@
       @if (Id == "new") {
         <h3>Email: <TelerikTextBox @bind-Value="_model.Email" Width="300px" /></h3>
       }
-      <h3>
-        Role:
-        <TelerikDropDownList Data="@_roles"
-                             @bind-Value="@_model.Role"
-                             TextField="Name"
-                             ValueField="Value"
-                             Width="300px" />
-      </h3>
-      @if (_model.Role != Roles.Admin) {
-        <h3>
-          Company:
-          <TelerikDropDownList Data="@_companies"
-                               @bind-Value="@_model.CompanyId"
-                               TextField="Name"
-                               ValueField="Value"
-                               Width="300px" />
-        </h3>
-        @if (_model.Role == Roles.CardIssuerUser) {
-          <h3>Permissions</h3>
-          <p>Note that (at the moment at least) it is up to you to make sure you don't give a user permission to edit something that they can't see! It would be nice if we could make it so that granting edit permission automatically granted view permission, and revoking view permission automatically revoked edit permission, but I haven't thought of a way of doing that yet.</p>
-          <ul style="list-style-type: none">
-            @foreach (PermissionDto permission in _model.Permissions) {
-              <li><TelerikCheckBox @bind-Value="@permission.HasPermission" Id="@permission.Value" /> <label for="@permission.Value">@permission.Value</label></li>
-            }
-          </ul>
-        }
-      }
+
+      <table class="table w-50">
+        <thead>
+          <tr>
+            <td></td>
+            <td>Company</td>
+            <td>Role</td>
+            <td>Permissions</td>
+            <td>Accountant</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><TelerikCheckBox @bind-Value="@_model.Admin" Id="admin" /></td>
+            <td><label for="admin">Global admin</label></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          @foreach (UserCompanyModel company in _model.Companies) {
+            <tr>
+              <td><TelerikCheckBox @bind-Value="@company.IsUser" Id="@($"company{company.CompanyId}")" /></td>
+              <td><label for="@($"company{company.CompanyId}")">@company.CompanyName</label></td>
+              <td>
+                @if (company.IsUser) {
+                  <TelerikDropDownList Data="@_companyRoles"
+                                       @bind-Value="@company.Role"
+                                       TextField="Name"
+                                       ValueField="Value"
+                                       Width="300px" />
+                }
+              </td>
+              <td>
+                @if (company is { IsUser: true,Role: Roles.CardIssuerUser }) {
+                  <ul style="list-style-type: none">
+                    @foreach (PermissionDto permission in company.Permissions) {
+                      <li><TelerikCheckBox @bind-Value="@permission.HasPermission" Id="@permission.Value" /> <label for="@permission.Value">@permission.Value</label></li>
+                    }
+                  </ul>
+                }
+              </td>
+              <td><TelerikCheckBox @bind-Value="@company.Accountant" /></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
       <TelerikButton Rounded="@(ThemeConstants.Button.Rounded.Large)"
                      ButtonType="@ButtonType.Submit"
                      ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)"
                      OnClick="Save">
         <span class="@IconsHelper.Save me-1"></span> Save
       </TelerikButton>
+      @if (_errors.Any()) {
+        <h3 class="text-danger">Error(s) saving the user details:</h3>
+        <ul>
+          @foreach (string error in _errors) {
+            <li>@error</li>
+          }
+        </ul>
+      }
     </EditForm>
   } else {
     <h1>User not found</h1>

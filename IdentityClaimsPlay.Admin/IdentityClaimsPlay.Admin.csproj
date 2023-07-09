@@ -18,6 +18,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Pixata.Blazor" Version="1.21.1" />
     <PackageReference Include="Pixata.Extensions" Version="1.24.0" />
     <PackageReference Include="Telerik.UI.for.Blazor" Version="4.3.0" />
   </ItemGroup>

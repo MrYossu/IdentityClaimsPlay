@@ -11,16 +11,16 @@
   <thead>
     <tr>
       <th>Email</th>
-      <th>Role</th>
-      <th>Permissions(s)</th>
+      <th>Global admin?</th>
+      <th>Role(s)</th>
     </tr>
   </thead>
   <tbody>
-    @foreach (User user in _users) {
+    @foreach (UserDto user in _users) {
       <tr>
         <td><a href="@(RouteHelper.UserDetails + user.Id)">@user.Email</a></td>
-        <td>@user.Claims.Single(c => c.ClaimType == ClaimsHelper.UserRole).ClaimValue.SplitCamelCase()</td>
-        <td>@user.Claims.Where(c => c.ClaimType != ClaimsHelper.UserRole).Select(c => c.ClaimValue.SplitCamelCase()).JoinStr()</td>
+        <td>@(user.IsAdmin ? "Y" : "N")</td>
+        <td><HtmlRaw Html="@user.Roles" /></td>
       </tr>
     }
   </tbody>

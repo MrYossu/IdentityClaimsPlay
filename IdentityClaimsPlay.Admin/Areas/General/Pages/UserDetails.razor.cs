@@ -4,6 +4,8 @@ namespace IdentityClaimsPlay.Admin.Areas.General.Pages;
 
 [Authorize]
 public partial class UserDetails {
+  #region Parameters, inject and class variables
+
   [Parameter]
   public string Id { get; set; } = "";
 
@@ -22,70 +24,118 @@ public partial class UserDetails {
   private readonly UserModel _model = new();
 
   private List<NameValuePair> _companies = new();
-  private List<RoleDto> _roles = new();
+  private List<RoleDto> _companyRoles = new();
+
+  #endregion
 
   protected override async Task OnInitializedAsync() {
-    _roles = Enum.GetValues(typeof(Roles)).Cast<Roles>().Select(p => new RoleDto(p, p.ToString().SplitCamelCase())).ToList();
+    _companyRoles = ClaimsHelper.AllCompanyRoles.Select(p => new RoleDto(p, p.ToString().SplitCamelCase())).ToList();
     _companies = (await Context.Companies.OrderBy(c => c.Name).ToListAsync()).Select(c => new NameValuePair(c.Name, c.Id)).ToList();
   }
 
   protected override async Task OnParametersSetAsync() {
     if (Id == "new") {
-      // TODO AYS - We need to add a UserCompanyRole with the company Id pulled from a dropdown (if not admin). The Role will be set when the data is submitted
       _user = new();
-      _model.Role = Roles.Admin;
-      _model.Permissions = ClaimsHelper.AllPermissions.Select(p => new PermissionDto(p, false)).ToList();
+      _model.Companies = _companies.Select(c => new UserCompanyModel {
+        CompanyId = c.Value,
+        CompanyName = c.Name,
+        Permissions = ClaimsHelper.AllPermissions.Select(p => new PermissionDto(p, false)).ToList()
+      }).ToList();
     } else {
-      _user = await Context.Users.SingleOrDefaultAsync(u => u.Id == Id);
+      _user = await Context.Users.Include(u => u.UserCompanyRoles).SingleOrDefaultAsync(u => u.Id == Id);
       if (_user is not null) {
         _model.Email = _user.Email ?? "";
-        List<ClaimDto> claims = (await UserManager.GetClaimsAsync(_user)).Select(c => new ClaimDto(c.Type, c.Value)).ToList();
-        _model.Role = Enum.TryParse(claims.Single(c => c.Type == ClaimsHelper.UserRole).Value, out Roles role) ? role : Roles.Admin;
-        _model.Permissions = ClaimsHelper.AllPermissions.Select(p => new PermissionDto(p, claims.Any(c => c.Value == p))).ToList();
+        _model.Admin = _user.UserCompanyRoles.Any(r => r.Role == Roles.Admin.ToString());
+        _model.Companies = _companies.Select(c => {
+          return new UserCompanyModel {
+            IsUser = _user.UserCompanyRoles.Any(r => r.CompanyId == c.Value && r.Role != Roles.Accountant.ToString()),
+            CompanyId = c.Value,
+            CompanyName = c.Name,
+            Role = _user.UserCompanyRoles.Any(r => ClaimsHelper.IsCompanyRole(r.Role)) ? ClaimsHelper.StringToRole(_user.UserCompanyRoles.Single(r => ClaimsHelper.IsCompanyRole(r.Role)).Role) : Roles.CardIssuerAdmin,
+            Accountant = _user.UserCompanyRoles.Any(r => r.CompanyId == c.Value && r.Role == Roles.Accountant.ToString()),
+            Permissions = ClaimsHelper.AllPermissions.Select(p => new PermissionDto(p, _user.UserCompanyRoles.Any(r => r.CompanyId == c.Value && r.Role == p))).ToList()
+          };
+        }).ToList();
       }
     }
     _loaded = true;
   }
 
+  private List<string> _errors = new();
   private async Task Save() {
+    // TODO AYS - Should really check to make sure they set at least one role. If role is card issuer user, then they should have set at least one permission
     if (Id == "new") {
-      User user = new() {
+      _user = new() {
         UserName = _model.Email,
         Email = _model.Email,
-        EmailConfirmed = true,
-        UserCompanyRoles = new[] {
-          new UserCompanyRole {
-            Role = _model.Role.ToString(),
-            CompanyId = _model.Role != Roles.Admin ? _model.CompanyId : null
-          }
-        }
+        EmailConfirmed = true
       };
-      await UserManager.CreateAsync(user, "1");
-      await UserManager.AddClaimAsync(user, new Claim(ClaimsHelper.UserRole, _model.Role.ToString()));
-      if (_model.Role == Roles.CardIssuerUser) {
-        foreach (string permission in _model.Permissions.Where(p => p.HasPermission).Select(p => p.Value)) {
-          await UserManager.AddClaimAsync(user, new Claim(ClaimsHelper.UserPermission, permission));
-        }
+      // TODO AYS - We should set his password to some random string and send hm an email advising him that he's now a user, with a link to reset his password
+      IdentityResult result=await UserManager.CreateAsync(_user, "1");
+      if (result.Succeeded) {
+        _user = await Context.Users.Include(u => u.UserCompanyRoles).SingleAsync(u => u.Id == _user.Id);
+        _user.UserCompanyRoles = CreateUserCompanyRoles();
+      } else {
+        _errors = result.Errors.Select(e => $"({e.Code}) {e.Description}").ToList();
+        return;
       }
     } else {
-      Context.Users.Update(_user);
-      await Context.SaveChangesAsync();
-      IList<Claim> claims = await UserManager.GetClaimsAsync(_user);
-      Claim role = claims.Single(c => c.Type == ClaimsHelper.UserRole);
-      await UserManager.ReplaceClaimAsync(_user, role, new Claim(ClaimsHelper.UserRole, _model.Role.ToString()));
-      List<Claim> permissions = claims.Where(c => c.Type != ClaimsHelper.UserRole).ToList();
-      foreach (PermissionDto dto in _model.Permissions) {
-        switch (dto.HasPermission) {
-          case true when permissions.All(p => p.Value != dto.Value):
-            await UserManager.AddClaimAsync(_user, new Claim(ClaimsHelper.UserPermission, dto.Value));
-            break;
-          case false when permissions.Any(p => p.Value == dto.Value):
-            await UserManager.RemoveClaimAsync(_user, permissions.First(p => p.Value == dto.Value));
-            break;
+      _user.UserCompanyRoles = CreateUserCompanyRoles();
+    }
+    await Context.SaveChangesAsync();
+    NavigationManager.NavigateTo("/users");
+  }
+
+  private List<UserCompanyRole> CreateUserCompanyRoles() {
+    List<UserCompanyRole> roles = new();
+    if (_model.Admin) {
+      roles.Add(new UserCompanyRole {
+        Role = Roles.Admin.ToString()
+      });
+    }
+    foreach (UserCompanyModel uc in _model.Companies) {
+      if (uc.IsUser) {
+        // Is he a company admin or flunky?
+        roles.Add(new UserCompanyRole {
+          CompanyId = uc.CompanyId,
+          Role = uc.Role.ToString()
+        });
+        // If a flunky, set his permissions
+        if (uc.Role == Roles.CardIssuerUser) {
+          foreach (PermissionDto perm in uc.Permissions.Where(p => p.HasPermission)) {
+            roles.Add(new UserCompanyRole {
+              CompanyId = uc.CompanyId,
+              Role = perm.Value
+            });
+          }
         }
       }
+      // Is he a company accountant?
+      if (uc.Accountant) {
+        roles.Add(new UserCompanyRole {
+          CompanyId = uc.CompanyId,
+          Role = Roles.Accountant.ToString()
+        });
+      }
     }
-    NavigationManager.NavigateTo("/users");
+    return roles;
+  }
+
+  #region Models
+
+  public class UserModel {
+    public string Email { get; set; } = "";
+    public bool Admin { get; set; }
+    public List<UserCompanyModel> Companies { get; set; } = new();
+  }
+
+  public class UserCompanyModel {
+    public bool IsUser { get; set; }
+    public string? CompanyId { get; set; }
+    public string CompanyName { get; set; } = "";
+    public Roles Role { get; set; } = Roles.CardIssuerAdmin;
+    public bool Accountant { get; set; }
+    public List<PermissionDto> Permissions = new();
   }
 
   public class RoleDto {
@@ -98,10 +148,5 @@ public partial class UserDetails {
     public string Name { get; set; } = "";
   }
 
-  private class UserModel {
-    public string Email { get; set; } = "";
-    public Roles Role { get; set; }
-    public string? CompanyId { get; set; }
-    public List<PermissionDto> Permissions = new();
-  }
+  #endregion
 }
